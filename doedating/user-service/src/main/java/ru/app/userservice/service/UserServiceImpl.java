@@ -34,9 +34,6 @@ public class UserServiceImpl implements UserService {
     private final UserCoordinatesRepository userCoordinatesRepository;
     private final GeoService geoService;
     private final UserFiltersRepository userFiltersRepository;
-    private final LikeRepository likeRepository;
-    private final LikeNotificationProducer likeNotificationProducer;
-    private final MatchRepository matchRepository;
     private final CalculateRecommendationProducer calculateRecommendationProducer;
     @Override
     public Flux<UserResponseDTO> getList() {
@@ -232,92 +229,14 @@ public class UserServiceImpl implements UserService {
                 }));
     }
 
-    /////////////
-    public Mono<List<UserResponseDTO>> getCompatibleUsersInfo(Long userId) {
-        return userFiltersRepository.findByUserId(userId)
-                .flatMap(userFilters -> userCoordinatesRepository.findByUserId(userId)
-                        .flatMapMany(currentUserCoord -> userRepository.findByGenderAndAgeBetween(
-                                        userFilters.getGenderFilter().name(),
-                                        userFilters.getMinAge(),
-                                        userFilters.getMaxAge())
-                                .flatMap(user -> userCoordinatesRepository.findByUserId(user.getId())
-                                        .filter(coord -> coord.getCity() != null &&
-                                                coord.getLatitude() != null &&
-                                                coord.getLongitude() != null)
-                                        .filter(coord -> geoService.calculateDistance(
-                                                currentUserCoord.getLatitude(),
-                                                currentUserCoord.getLongitude(),
-                                                coord.getLatitude(),
-                                                coord.getLongitude()) <= userFilters.getSearchRadius())
-                                        .flatMap(coord -> Mono.zip(
-                                                userInterestRepository.findByUserId(user.getId())
-                                                        .map(UserInterest::getInterestId)
-                                                        .collectList(),
-                                                Mono.just(user)
-                                        ))
-                                )
-                                .map(tuple -> {
-                                    List<Long> selectedInterestIds = tuple.getT1();
-                                    User matchedUser = tuple.getT2();
 
-                                    return UserResponseDTO.builder()
-                                            .id(matchedUser.getId())
-                                            .aboutMe(matchedUser.getAboutMe())
-                                            .selectedInterests(selectedInterestIds)
-                                            .build();
-                                }))
-                        .collectList()
-                );
-    }
     // Лайки
 
-    @Override
-    public Mono<Void> likeUser(Long firstUserId, Long secondUserId, Integer typeOfLike) {
-
-        return likeRepository.findByFirstUserIdAndSecondUserId(firstUserId, secondUserId)
-                .flatMap(existingLike -> {
-                    return Mono.error(new IllegalStateException("Уже есть лайк"));
-                })
-                .switchIfEmpty(Mono.defer(() -> {
-                    Like like = Like.builder()
-                            .firstUserId(firstUserId)
-                            .secondUserId(secondUserId)
-                            .typeOfLike(typeOfLike)
-                            .createdAt(LocalDateTime.now())
-                            .build();
-                    return likeRepository.save(like);
-                }))
-                .then(checkMatch(firstUserId, secondUserId, typeOfLike))
-                .then(sendNotificationIfNecessary(secondUserId, typeOfLike))
-                .doOnError(e -> log.error("Ошибка с лайком", e))
-                .then(Mono.empty());
-    }
 
 
-    private Mono<Void> sendNotificationIfNecessary(Long secondUserId, Integer typeOfLike) {
-        if (typeOfLike != 1) {
-            return Mono.empty();
-        }
-        return likeNotificationProducer.sendNotification(secondUserId, "like");
-    }
 
-    private Mono<Void> checkMatch(Long firstUserId, Long secondUserId, Integer typeOfLike) {
-        return likeRepository.findByFirstUserIdAndSecondUserId(secondUserId, firstUserId)
-                .flatMap(otherLike -> {
-                    if (otherLike.getTypeOfLike() == 1 || otherLike.getTypeOfLike() == 2) {
-                        Match match = Match.builder()
-                                .userId1(Math.min(firstUserId, secondUserId))
-                                .userId2(Math.max(firstUserId, secondUserId))
-                                .createdAt(LocalDateTime.now())
-                                .build();
-                        return matchRepository.save(match)
-                                .then(likeNotificationProducer.sendNotification(firstUserId, "match"))
-                                .then(likeNotificationProducer.sendNotification(secondUserId, "match"));
-                    }
-                    return Mono.empty();
-                })
-                .switchIfEmpty(Mono.empty());
-    }
+
+
 
     @Override
     public Mono<Void> startRecommendation(Long userId){
