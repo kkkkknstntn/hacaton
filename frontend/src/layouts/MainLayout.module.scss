@@ -2,14 +2,13 @@
   display: grid;
   grid-template-columns: 220px 1fr 20px;
   grid-template-rows: 150px 1fr;
-  height: 100vh;
-  overflow: hidden;
+  //overflow: hidden;
   border-radius: 2%;
 }
 .mainContent {
   grid-column: 2 / span 1;
   grid-row: 2 / span 1;
   margin: 10px;
-  overflow: hidden;
+  //overflow: hidden;
   border-radius: 2%;
 }

@@ -4,9 +4,8 @@
   position: fixed !important;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 120px;
-  background-color: var(--text-primary) !important;
+  height: 10%;
+  background-color: var(--secondary-dark) !important;
   color: var(--background-default) !important;
   .themeButton {
     font-size: 1.5rem !important;
@@ -40,10 +39,6 @@
   align-items: center;
   border-radius: 8px;
   margin-right: 16px;
-}
-
-.title {
-  font-size: 32px !important;
 }
 
 .iconsContainer {
