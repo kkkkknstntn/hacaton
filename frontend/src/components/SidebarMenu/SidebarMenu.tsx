@@ -5,9 +5,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
-import MobileFriendlyIcon from "@mui/icons-material/MobileFriendly";
 import SettingsIcon from "@mui/icons-material/Settings";
-
 import styles from "./SidebarMenu.module.scss";
 import { SidebarMenuProps } from "./SidebarMenu.type.ts";
 
@@ -24,18 +22,13 @@ const menuItems = [
   },
   {
     path: "/notifications",
-    label: "Уведомления",
+    label: "События",
     icon: <NotificationsIcon className={styles.icon} />,
   },
   {
     path: "/search",
     label: "Поиск",
     icon: <SearchIcon className={styles.icon} />,
-  },
-  {
-    path: "/matches",
-    label: "Лайки",
-    icon: <MobileFriendlyIcon className={styles.icon} />,
   },
   {
     path: "/settings",

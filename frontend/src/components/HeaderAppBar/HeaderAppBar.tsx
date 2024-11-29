@@ -42,7 +42,7 @@ const HeaderAppBar: React.FC = () => {
             </Typography>
           </Box>
           <Typography variant="h4" noWrap className={styles.title}>
-            doupainting
+            ~patrolmatch~
           </Typography>
         </Box>
 
