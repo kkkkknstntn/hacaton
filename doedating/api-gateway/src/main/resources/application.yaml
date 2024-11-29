@@ -27,7 +27,10 @@ spring:
           predicates:
             - Path=/api/users, /api/users/**, /api/likes/**, /api/likes, /api/matches/**, /api/matches,
             - Method=GET, POST, PUT, PATCH, DELETE
-
+        - id: chat-service
+          uri: lb://chat-service
+          predicates:
+            - Path=/ws/**
         - id: openapi
           uri: http://localhost:${server.port}
           predicates:
