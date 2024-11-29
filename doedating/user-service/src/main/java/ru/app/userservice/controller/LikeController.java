@@ -29,7 +29,7 @@ public class LikeController {
             summary = "Получить все лайки, поставленные данному пользователю",
             description = "Возвращает все лайки поставленные пользователю")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<Like> getAllMatchesByHeader(@RequestHeader(value = "X-User-ID", required = false) Long userId) {
+    public Flux<Like> getAllLikes(@RequestHeader(value = "X-User-ID", required = false) Long userId) {
         return likeService.getListBySecondUserId(userId);
     }
 }

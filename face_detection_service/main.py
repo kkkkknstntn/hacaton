@@ -4,7 +4,7 @@ import json
 import logging
 from kafka_consumer import KafkaConsumerService
 from kafka_producer import KafkaProducerService
-# from face_detector import FaceDetectorService
+#from face_detector import FaceDetectorService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

@@ -14,5 +14,5 @@ public interface LikeRepository extends R2dbcRepository<Like, Long> {
     @Query("SELECT * FROM likes WHERE :user_id1 = secondUserId AND :typeOfLike = 1")
     Flux<Like> findAllBySecondUserId(@Param("user_id2")  Long userId2);
 
-    Flux<Match> findAllLikesForUserId1(@Param("user_id1")  Long userId2);
+    Flux<Like> findAllLikesForUserId1(@Param("user_id1")  Long userId2);
 }
