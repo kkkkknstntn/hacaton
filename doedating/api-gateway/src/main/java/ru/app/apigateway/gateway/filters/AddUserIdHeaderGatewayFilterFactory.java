@@ -13,13 +13,21 @@ public class AddUserIdHeaderGatewayFilterFactory implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-            String header = exchange.getResponse().getHeaders().getFirst("X-User-Name");
-            log.info("X-User-Name: {}", header);
-            if (header != null) {
+            String nameHeader = exchange.getResponse().getHeaders().getFirst("X-User-Name");
+            log.info("X-User-Name: {}", nameHeader);
+            if (nameHeader != null) {
                 exchange.getRequest().mutate()
-                        .header("X-User-Name", header)
+                        .header("X-User-Name", nameHeader)
                         .build();
             }
+
+        String idHeader = exchange.getResponse().getHeaders().getFirst("X-User-ID");
+        log.info("X-User-ID: {}", idHeader);
+        if (idHeader != null) {
+            exchange.getRequest().mutate()
+                    .header("X-User-ID", idHeader)
+                    .build();
+        }
             return chain.filter(exchange);
         }
 }

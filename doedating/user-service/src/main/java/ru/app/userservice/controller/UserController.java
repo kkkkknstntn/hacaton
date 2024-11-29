@@ -58,9 +58,9 @@ public class UserController {
             description = "Возвращает информацию о аутентифицированном пользователе.")
     @GetMapping("/info")
     public Mono<UserResponseDTO> getUserInfo(
-            @RequestHeader(value = "X-User-Name", required = false) String username)
+            @RequestHeader(value = "X-User-ID", required = false) Long userId)
     {
-        return userService.findByUsername(username);
+        return userService.getById(userId);
     }
     @Operation(
             summary = "Обновить данные пользователя",
@@ -135,30 +135,6 @@ public class UserController {
     public Mono<UserFilters> updateUserFilters(
             @PathVariable Long userId, @RequestBody UserFilters filters) {
         return userService.updateUserFilters(userId, filters);
-    }
-
-
-    // Рудимент
-
-    @Operation(
-            summary = "Получить список пользователей, подходящих по фильтрам и расстоянию",
-            description = "Возвращает список пользователей, которые подходят по фильтрам текущего пользователя и находятся в пределах указанного радиуса."
-    )
-    @GetMapping(value = "/filters/compatible/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<List<UserResponseDTO>> getCompatibleUsers(
-            @PathVariable Long userId
-    ) {
-        return userService.getCompatibleUsersInfo(userId);
-    }
-
-    // ЛАЙКИ
-    @PostMapping("/{userId}/like")
-    public Mono<Void> likeUser(
-            @PathVariable Long userId,
-            @RequestParam Long targetUserId,
-            @RequestParam Integer typeOfLike
-    ) {
-        return userService.likeUser(userId, targetUserId, typeOfLike);
     }
 
     // Начать рекомендации
