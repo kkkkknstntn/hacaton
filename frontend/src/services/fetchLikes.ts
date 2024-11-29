@@ -1,12 +1,16 @@
 import { fetchWithToken } from "./fetchService";
 
-export const sendLike = async (userId: number, targetUserId: number, typeOfLike: number): Promise<void> => {
+export const sendLike = async (targetUserId: number, typeOfLike: number): Promise<void> => {
   try {
-    const response = await fetchWithToken<void>(`/api/${userId}/like?targetUserId=${targetUserId}&typeOfLike=${typeOfLike}`, {
-      method: "POST",
+    const response = await fetchWithToken<void>('/api/likes', {
+      method: "POST", 
+      body: new URLSearchParams({
+        targetUserId: targetUserId.toString(),
+        typeOfLike: typeOfLike.toString(),
+      }).toString(),
     });
-    
-    console.log(`Like from user ${userId} to user ${targetUserId} sent successfully.`, response);
+
+    console.log(response);
   } catch (error) {
     console.error("Error sending like:", error);
     throw new Error("Failed to send like.");

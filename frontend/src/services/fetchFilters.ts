@@ -7,7 +7,7 @@ export interface Filter{
     searchRadius : number;
 }
 
-///filters/{userId}
+//filters/{userId}
 
 export const fetchFilters = async (userId: number): Promise<Filter> => {
     try {
