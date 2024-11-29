@@ -53,6 +53,23 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  chat_db:
+    container_name: chat_db
+    image: postgres:16.0
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=chat_db
+    ports:
+      - '5435:5432'
+    volumes:
+      - ./backend/chat-service:/docker-entrypoint-initdb.d
+      - pg_chat:/var/lib/postgresql/data
+    networks:
+      - doedating-network
+
   # хранилище фото
   photo-storage:
     image: nginx:alpine
@@ -289,6 +306,23 @@ services:
     volumes:
       - photo_storage_volume:/usr/share/nginx/html/photos
 
+  chat-service:
+    container_name: chat-service
+    restart: always
+    build: doedating/chat-service
+    ports:
+      - "8090:8082"
+    depends_on:
+      - kafka
+      - chat_db
+      - eureka-server
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://chat_db:5435/chat_db'
+      SPRING_DATASOURCE_USERNAME: 'postgres'
+      SPRING_DATASOURCE_PASSWORD: 'postgres'
+    networks:
+      - doedating-network
+
 #  recommendation-service:
 #    build:
 #      context: ./recommendation_system_service
@@ -331,4 +365,5 @@ networks:
 volumes:
   pg_user:
   pg_auth:
+  pg_chat:
   photo_storage_volume:

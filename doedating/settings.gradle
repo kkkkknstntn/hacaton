@@ -6,4 +6,6 @@ includeBuild 'auth-service'
 
 includeBuild 'user-service'
 
+includeBuild 'chat-service'
+
 includeBuild 'api-gateway'
