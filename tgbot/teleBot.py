@@ -22,6 +22,7 @@ consumer_conf = {
 TOKEN = "8139260626:AAEFB1ZobUmmNEX3TB3o_67cKpat6d1PXv0"
 BASE_URL = getenv('BASE_URL')
 dp = Dispatcher()
+consumer = None
 scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
 start_router = Router()
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -57,6 +58,7 @@ def site_link_kb():
     ]
     return InlineKeyboardMarkup(inline_keyboard=kb)
 
+
 @start_router.message(CommandStart())
 async def command_start_handler(message: Message):
     await message.answer(f'Привет, {message.from_user.full_name}\n'
@@ -79,39 +81,61 @@ async def command_info(message: Message):
 
 @start_router.message(F.text == "Выключить уведомления")
 async def notifications_off(message: Message):
-    asyncio.create_task(consume_kaf_messages())
-    await message.answer(f'Уведомления успешно выключены', reply_markup=kb_notifications_on())
+    await kaf_stop()
+    await message.answer(f'Уведомления выключены', reply_markup=kb_notifications_on())
 
 
 @start_router.message(F.text == "Включить уведомления")
 async def notifications_on(message: Message):
+    #!!!
     asyncio.create_task(consume_kaf_messages())
-    await message.answer(f'Уведомления успешно включены', reply_markup=main_kb())
+    await message.answer(f'Уведомления включены', reply_markup=main_kb())
 
 
 async def kaf_stop():
-    consumer = AIOKafkaConsumer(
-        INPUT_TOPIC,
-        bootstrap_servers=KAFKA_BROKER,
-        value_deserializer=lambda m: json.loads(m.decode('utf-8'))
-    )
-    await consumer.stop()
+    global consumer
+    if consumer:
+        await consumer.stop()
+        consumer = None
+        logger.info("Kafka consumer stopped successfully.")
+    else:
+        logger.warning("Kafka consumer is not running.")
 
 
 async def consume_kaf_messages():
+    global consumer
+    if consumer is not None:
+        logger.warning("Kafka consumer is already running")
+        return
     consumer = AIOKafkaConsumer(
         INPUT_TOPIC,
         bootstrap_servers=KAFKA_BROKER,
         value_deserializer=lambda m: json.loads(m.decode('utf-8'))
     )
     await consumer.start()
+    logger.info("Kafka consumer started.")
     try:
         async for msg in consumer:
-            massage_data = msg.value
-            await bot.send_message(chat_id="8139260626", text="бабангида")
-    except:
+            message_data = msg.value
+            if message_data.get("type") == "like":
+                await send_like_notification(message_data)
+            elif message_data.get("type") == "match":
+                await send_like_notification(message_data)
+            #await bot.send_message(chat_id="8139260626", text="бабангида")
+    except Exception as e:
+        logger.error(f"Error in Kafka consumer: {e}")
+    finally:
         await consumer.stop()
-        await bot.send_message(chat_id="8139260626", text="бабанОшибка")
+        consumer = None
+        logger.info("Kafka consumer stopped.")
+
+async def send_like_notification(data):
+    chat_id = data["chat_id"]
+    await bot.send_message(chat_id, f"Новый лайк! {data['message']}")
+
+async def send_match_notification(data):
+    chat_id = data["chat_id"]
+    await bot.send_message(chat_id, f"Поздравляем, у вас новый мэтч! {data['message']}")
 
 
 async def main():
