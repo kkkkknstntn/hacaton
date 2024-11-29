@@ -1,21 +1,24 @@
-// src/components/SearchActions/SearchActions.tsx
 import React from "react";
 import { Box, IconButton } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CloseIcon from "@mui/icons-material/Close";
-import StarIcon from "@mui/icons-material/Star";
 import styles from "./SearchActions.module.scss";
+import { LikeType } from "../../services/likeService";
 
 interface SearchActionsProps {
-  onLike: () => void;
-  onDislike: () => void;
-  onSuperLike: () => void;
+  onLike: (type: LikeType) => Promise<void>; 
+  onDislike: () => void; 
+  onHiddenLike: () => void; 
+  likeType: LikeType; 
+  setLikeType: React.Dispatch<React.SetStateAction<LikeType>>;
 }
 
 const SearchActions: React.FC<SearchActionsProps> = ({
   onLike,
   onDislike,
-  onSuperLike,
+  onHiddenLike,
+  likeType,
+  setLikeType,
 }) => (
   <Box className={styles.actions}>
     <IconButton
@@ -25,15 +28,27 @@ const SearchActions: React.FC<SearchActionsProps> = ({
     >
       <CloseIcon className={styles.dislikeIcon} />
     </IconButton>
+
     <IconButton
-      onClick={onSuperLike}
-      className={styles.button}
-      aria-label="Super Like"
+      onClick={() => {
+        setLikeType(1);
+        onLike(1); 
+      }}
+      className={`${styles.button} ${likeType === 1 ? styles.active : ""}`}
+      aria-label="Like"
     >
-      <StarIcon className={styles.superLikeIcon} />
-    </IconButton>
-    <IconButton onClick={onLike} className={styles.button} aria-label="Like">
       <FavoriteIcon className={styles.likeIcon} />
+    </IconButton>
+
+    <IconButton
+      onClick={() => {
+        setLikeType(2); 
+        onHiddenLike(); 
+      }}
+      className={`${styles.button} ${likeType === 2 ? styles.active : ""}`}
+      aria-label="Hidden Like"
+    >
+      <FavoriteIcon className={`${styles.likeIcon} ${styles.hiddenLikeIcon}`} />
     </IconButton>
   </Box>
 );
