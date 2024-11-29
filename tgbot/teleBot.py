@@ -57,9 +57,7 @@ def site_link_kb():
     ]
     return InlineKeyboardMarkup(inline_keyboard=kb)
 
-
-@dp.message(CommandStart())
-# @start_router.message(CommandStart())
+@start_router.message(CommandStart())
 async def command_start_handler(message: Message):
     await message.answer(f'Привет, {message.from_user.full_name}\n'
                          f'Этот бот будет присылать тебе уведомления о новых '
