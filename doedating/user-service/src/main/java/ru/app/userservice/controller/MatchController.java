@@ -16,13 +16,13 @@ import ru.app.userservice.service.MatchServiceImpl;
 public class MatchController {
     private final MatchServiceImpl matchService;
 
-    @Operation(
-            summary = "Получить все мэтчи",
-            description = "Возвращает списокмэтчей.")
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<Match> getAllMatches() {
-        return matchService.getList();
-    }
+//    @Operation(
+//            summary = "Получить все мэтчи",
+//            description = "Возвращает списокмэтчей.")
+//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+//    public Flux<Match> getAllMatches() {
+//        return matchService.getList();
+//    }
 
     @Operation(
             summary = "Получить все мэтчи пользователя.",
