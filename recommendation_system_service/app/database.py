@@ -65,7 +65,11 @@ async def find_matching_users(session: AsyncSession, filters):
                 "city": user.city,
                 "job": user.job,
                 "education": user.education,
-                "photos": photos
+                "photos": photos,
+                "age": user.age,
+                "distance": distance  # Добавляем расстояние для сортировки
             })
 
+    # Сортировка по расстоянию
+    matching_users.sort(key=lambda user: user["distance"])
     return matching_users
