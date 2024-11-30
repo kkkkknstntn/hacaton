@@ -1,19 +1,17 @@
 import { fetchWithToken } from "./fetchService";
 
-// Типы лайков
 export type LikeType = 1 | 2 | 3;
 
 export const sendLike = async (targetId: number, likeType: LikeType): Promise<void> => {
   try {
-    // Отправка запроса с необходимыми параметрами
-    const response = await fetchWithToken(`/api/likes`, {
-      method: "POST",
-      body: JSON.stringify({
-        targetId,
-        likeType,  // 1 - лайк, 2 - скрытый лайк, 3 - дизлайк
-      }),
+    const url = new URL('/api/likes', window.location.origin);
+    url.searchParams.append('targetUserId', targetId.toString());
+    url.searchParams.append('typeOfLike', likeType.toString());
+
+    const response = await fetchWithToken(url.toString(), {
+      method: 'POST', 
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
@@ -21,7 +19,6 @@ export const sendLike = async (targetId: number, likeType: LikeType): Promise<vo
       throw new Error("Failed to send like");
     }
 
-    // Логируем успешную отправку лайка
     console.log(`Like of type ${likeType} sent to user with ID ${targetId}`);
   } catch (error) {
     console.error("Error sending like:", error);

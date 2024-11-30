@@ -21,6 +21,7 @@ const SaveProfileButton: React.FC = () => {
       "education",
       "aboutMe",
       "selectedInterests",
+      "telegramId",
     ];
     const hasRequiredFields = requiredFields.every((field) =>
       Boolean(userProfile[field as keyof typeof userProfile])
@@ -48,6 +49,7 @@ const SaveProfileButton: React.FC = () => {
           city: userProfile.city,
           job: userProfile.job,
           education: userProfile.education,
+          telegram_id: userProfile.telegramId,
           about_me: userProfile.aboutMe,
           selected_interests: userProfile.selectedInterests,
           photos: userProfile.photos,

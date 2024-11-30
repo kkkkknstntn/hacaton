@@ -87,6 +87,7 @@ export const updateUser = async (
     about_me: string;
     selected_interests: number[];
     photos: string[];
+    telegram_id: string;
   }>
 ): Promise<void> => {
   try {
@@ -151,7 +152,7 @@ export const fetchUserInfo = async (): Promise<UserInfo> => {
     const response = await fetchWithToken<UserResponseInfo>(`/api/users/info`, {
       method: "GET",
     });
-
+    console.log(response);
     if (!response) {
       throw new Error("Не удалось получить информацию о пользователе");
     }
@@ -171,6 +172,8 @@ export const fetchUserInfo = async (): Promise<UserInfo> => {
       aboutMe: response.about_me,
       selectedInterests: response.selected_interests,
       photos: response.photos,
+      telegramId: response.telegram_id,
+      chatId: response.chat_id
     };
 
     return user;

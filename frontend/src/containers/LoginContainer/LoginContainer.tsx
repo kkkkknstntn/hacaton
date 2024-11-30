@@ -12,7 +12,7 @@ const LoginContainer: React.FC = () => {
   const authState = useSelector((state: RootState) => state.auth);
 
   const handleLogin = async (email: string, password: string) => {
-    const resultAction = await dispatch(login({ username: email, password }));
+    const resultAction = await dispatch(login({ username: email, password: password }));
     if (login.fulfilled.match(resultAction)) {
       navigate("/myprofile");
     }

@@ -10,15 +10,16 @@ import { createAppTheme } from "./theme";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import UserProfilePage from "./pages/UserProfilePage/UserProfilePage";
-import VkAuthCallback from "./components/VkElements";
+//import VkAuthCallback from "./components/VkElements";
 import ChatPage from "./pages/ChatPage/ChatPage";
 import NotificationPage from "./pages/NotificationPage/NotificationsPage";
-//import SearchPage from "./pages/SearchPage/SearchPage";
+import SearchPage from "./pages/SearchPage/SearchPage";
 import MatchLikesPage from "./pages/MatchLikesPage/MatchLikesPage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import MainLayout from "./layouts/MainLayout";
 import HeaderAppBarContainer from "./containers/HeaderAppBarContainer/HeaderAppBarContainer";
 import { relogin } from "./store/authSlice";
+import VkAuthCallback from "./components/VkElements/VkAuthCallback";
 
 const AppContent: React.FC = () => {
   const currentTheme = useSelector((state: RootState) => state.theme.theme);
@@ -47,17 +48,20 @@ const AppContent: React.FC = () => {
             {/* <Route path="admin" element={<AdminPage />} /> */}
             <Route path="chat" element={<ChatPage />} />
             <Route path="notifications" element={<NotificationPage />} />
-            {/* <Route path="search" element={<SearchPage />} /> */}
+            <Route path="search" element={<SearchPage />} />
             <Route path="matches" element={<MatchLikesPage />} />
             <Route path="settings" element={<SettingsPage />} />
-            <Route path="login/oauth2/callback" element={<VkAuthCallback />} />
+            <Route
+              path="/api/auth/login/oauth2/code/vk" ///api/auth/login/oauth2/code/vk
+              element={<VkAuthCallback />}
+            />
           </Route>
         </Routes>
       </Router>
     </ThemeProvider>
   );
 };
-
+//http://localhost/api/auth/login/oauth2/code/vk
 function App() {
   return (
     <Provider store={store}>

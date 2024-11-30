@@ -18,7 +18,7 @@ const Login: React.FC<LoginProps> = ({
     if (email && password) {
       onLogin(email, password);
     } else {
-      // Handle empty fields error locally if needed
+      console.log("ERROR");
     }
   };
 

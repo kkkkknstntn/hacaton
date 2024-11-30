@@ -1,81 +1,131 @@
-// import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import { fetchInterests, fetchUsers, sendLike } from '../services/apiService';
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { fetchInterests } from "../services/fetchInterests";
+import { RootState } from ".";
+import { fetchUsersRecommendation } from "./fetchUsersRec";
 
-// export interface Interest {
-//   name: string;
-//   color: string;
-//   textColor: string;
-// }
+export interface Interest {
+  name: string;
+  color: string;
+  textColor: string;
+}
+export interface User {
+  id: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  city: string;
+  job: string;
+  education: string;
+  aboutMe: string;
+  photos: string[];
+  interests: Interest[];
+}
 
-// export interface User {
-//   id: number;
-//   username: string;
-//   firstName: string;
-//   lastName: string;
-//   age: number;
-//   city: string;
-//   job: string;
-//   education: string;
-//   aboutMe: string;
-//   photos: string[];
-//   interests: Interest[];
-//   // другие поля
-// }
+interface SearchState {
+  users: User[];
+  currentIndex: number;
+  isLoading: boolean;
+}
 
-// interface SearchState {
-//   users: User[];
-//   currentIndex: number;
-//   isLoading: boolean;
-// }
+const initialState: SearchState = {
+  users: [],
+  currentIndex: 0,
+  isLoading: false,
+};
 
-// const initialState: SearchState = {
-//   users: [],
-//   currentIndex: 0,
-//   isLoading: true, // Начальное состояние загрузки
-// };
+export const fetchUsers = createAsyncThunk<User[], void>(
+  "search/fetchUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const users = await fetchUsersRecommendation();
+      return users;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
-// const searchSlice = createSlice({
-//   name: 'search',
-//   initialState,
-//   reducers: {
-//     setUsers(state, action: PayloadAction<User[]>) {
-//       state.users = action.payload;
-//       state.isLoading = false; // Данные загружены
-//     },
-//     setLoading(state, action: PayloadAction<boolean>) {
-//       state.isLoading = action.payload;
-//     },
-//     setNextUser(state) {
-//       state.currentIndex = (state.currentIndex + 1) % state.users.length;
-//     },
-//     sendLikeAction(state, action: PayloadAction<number>) {
-//       const userId = state.users[state.currentIndex].id;
-//       sendLike(userId, action.payload); // Тип лайка передаём через payload
-//     },
-//   },
-// });
+export const fetchUserInterests = createAsyncThunk<
+  void,
+  { userId: number; index: number }
+>(
+  "search/fetchUserInterests",
+  async ({ userId, index }, { dispatch, rejectWithValue }) => {
+    try {
+      const interests = await fetchInterests(userId);
+      dispatch(setUserInterests({ interests, index }));
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
-// export const { setUsers, setLoading, setNextUser, sendLikeAction } = searchSlice.actions;
+// Слайс для работы с поиском
+const searchSlice = createSlice({
+  name: "search",
+  initialState,
+  reducers: {
+    nextUser(state) {
+      if (state.users.length > 0) {
+        state.users.splice(state.currentIndex, 1);
 
-// export const fetchUsersData = () => async (dispatch: any) => {
-//   try {
-//     dispatch(setLoading(true)); // Включаем загрузку
+        if (state.users.length > 0) {
+          state.currentIndex =
+            state.currentIndex >= state.users.length
+              ? 0
+              : state.currentIndex;
+        } else {
+          state.currentIndex = 0;
+        }
+      }
+    },
+    setUserInterests(
+      state,
+      action: PayloadAction<{ interests: Interest[]; index: number }>
+    ) {
+      const { interests, index } = action.payload;
+      if (state.users[index]) {
+        state.users[index].interests = interests;
+      }
+    },
+    resetUsers(state) {
+      state.users = [];
+      state.currentIndex = 0;
+    },
+    reverseUsers(state) {
+      state.users.reverse(); 
+      state.currentIndex = 0; // Сбрасываем индекс на первый элемент
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
+        state.isLoading = false;
+        state.users = action.payload;
+      })
+      .addCase(fetchUsers.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchUserInterests.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUserInterests.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchUserInterests.rejected, (state) => {
+        state.isLoading = false;
+      });
+  },
+});
 
-//     // Здесь можно получить пользователей с сервера
-//     const usersData = await fetchUsers();
-//     dispatch(setUsers(usersData));
-//   } catch (error) {
-//     console.error('Ошибка при получении пользователей:', error);
-//   }
-// };
 
-// export const fetchUserInterests = (userId: number) => async (dispatch: any) => {
-//   try {
-//     const interests = await fetchInterests(userId);
-//     dispatch(setUsersWithInterests({ userId, interests }));
-//   } catch (error) {
-//     console.error('Ошибка при получении интересов:', error);
-//   }
-// };
+export const { nextUser, setUserInterests, resetUsers, reverseUsers } =
+  searchSlice.actions;
 
-// export default searchSlice.reducer;
+export const selectSearchState = (state: RootState) => state.search;
+
+export default searchSlice.reducer;

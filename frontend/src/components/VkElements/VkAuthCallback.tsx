@@ -8,11 +8,11 @@ const VkAuthCallback: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("URL параметр:", window.location.search); // Проверь параметры в URL
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code"); // Извлекаем код авторизации
-
+    console.log("Код авторизации:", code);
     if (code) {
-      // Запрос на сервер для получения access_token, user_id, access_expires_at
       fetch(`http://localhost/api/auth/login/oauth2/code/vk?code=${code}`, {
         method: "GET",
       })
@@ -25,19 +25,12 @@ const VkAuthCallback: React.FC = () => {
         .then((data) => {
           const { access_token, access_expires_at, user_id } = data;
           if (access_token && access_expires_at && user_id) {
-            // Сохраняем данные в localStorage
             localStorage.setItem("accessToken", access_token);
             localStorage.setItem(
               "accessTokenExpirationTime",
               access_expires_at
             );
             localStorage.setItem("userId", user_id.toString());
-            console.log("хУЙ ПИЗДА хУЙ ПИЗДА");
-            console.log(access_token);
-            console.log(access_expires_at);
-            console.log(user_id);
-            console.log("хУЙ ПИЗДА хУЙ ПИЗДА");
-            // Обновляем Redux состояние
             dispatch(vkAuthSuccess({ token: access_token, userId: user_id }));
             navigate("/myprofile");
           } else {

@@ -1,32 +1,35 @@
-// // src/components/SearchInterests/SearchInterestsContainer.tsx
-// import React from "react";
-// import { useSelector } from "react-redux";
-// import { RootState } from "../../store";
-// import styles from "./SearchInterestsContainer.module.scss";
-// import SearchInterests from "../../components/SearchInterests/SearchInterests";
-// import interestsData from "../../data/interests.json"; // Подключаем JSON с данными интересов
-// import { Interest } from "../../store/userSlice";
+// src/components/SearchInterests/SearchInterestsContainer.tsx
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { Interest } from "../../store/searchSlice"; // типы интересов
+import SearchInterests from "../../components/SearchInterests/SearchInterests";
+import styles from "./SearchInterestsContainer.module.scss";
+import { fetchInterests } from "../../services/fetchInterests";
 
-// const SearchInterestsContainer: React.FC = () => {
-//   const { users, currentIndex } = useSelector(
-//     (state: RootState) => state.search
-//   );
+const SearchInterestsContainer: React.FC = () => {
+  const { users, currentIndex } = useSelector(
+    (state: RootState) => state.search
+  );
 
-//   // Получаем интересы пользователя по их id
-//   const userInterestIds = users[currentIndex]?.interests || [];
-//   const userInterests = userInterestIds
-//     .map((id) =>
-//       Object.values(interestsData.categories)
-//         .flatMap((category) => category.items)
-//         .find((interest) => interest.id === id)
-//     )
-//     .filter(Boolean) as Interest[]; // Приведение типа после фильтрации
+  const [interests, setInterests] = useState<Interest[]>([]);
 
-//   return (
-//     <div className={styles.interestsContainer}>
-//       <SearchInterests interests={userInterests} />
-//     </div>
-//   );
-// };
+  useEffect(() => {
+    const loadInterests = async () => {
+      const userInterests = await fetchInterests(users[currentIndex]?.id || 0);
+      setInterests(userInterests);
+    };
 
-// export default SearchInterestsContainer;
+    if (users.length > 0 && users[currentIndex]) {
+      loadInterests();
+    }
+  }, [users, currentIndex]);
+
+  return (
+    <div className={styles.interestsContainer}>
+      <SearchInterests interests={interests} />
+    </div>
+  );
+};
+
+export default SearchInterestsContainer;

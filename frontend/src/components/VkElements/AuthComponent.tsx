@@ -4,6 +4,7 @@ import VkIdButton from "./VkButton";
 
 const AuthComponent: React.FC = () => {
   const handleClick = () => {
+    console.log("Редирект на VK...");
     window.location.href = "http://localhost/api/auth/oauth2/vk";
   };
 

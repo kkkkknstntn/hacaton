@@ -30,6 +30,9 @@ export interface UserInfo {
   aboutMe: string;
   selectedInterests: number[];
   photos: string[];
+  telegramId: string;
+  chatId: string;
+
 }
 export interface UserResponseInfo {
   id: number;
@@ -45,4 +48,6 @@ export interface UserResponseInfo {
   about_me: string;
   selected_interests: number[];
   photos: string[];
+  telegram_id:string;
+  chat_id: string;
 }

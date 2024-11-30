@@ -22,6 +22,7 @@ const UserProfileFields: React.FC<UserProfileFieldsProps> = ({
   city,
   job,
   education,
+  telegramId,
   onEmailChange,
   onFirstNameChange,
   onLastNameChange,
@@ -30,6 +31,7 @@ const UserProfileFields: React.FC<UserProfileFieldsProps> = ({
   onCityChange,
   onJobChange,
   onEducationChange,
+  onTelegramIdChange,
 }) => {
   return (
     <Box className={styles.formContainer}>
@@ -37,21 +39,18 @@ const UserProfileFields: React.FC<UserProfileFieldsProps> = ({
         type="text"
         label="Email"
         value={email}
-        //icon={<Mail />}
         onChange={(e) => onEmailChange(e.target.value)}
       />
       <InputFieldButton
         type="text"
         label="Имя"
         value={firstName}
-        //icon={<Person />}
         onChange={(e) => onFirstNameChange(e.target.value)}
       />
       <InputFieldButton
         type="text"
         label="Фамилия"
         value={lastName}
-        //icon={<Person />}
         onChange={(e) => onLastNameChange(e.target.value)}
       />
 
@@ -86,6 +85,12 @@ const UserProfileFields: React.FC<UserProfileFieldsProps> = ({
         value={education}
         //icon={<Bookmark />}
         onChange={(e) => onEducationChange(e.target.value)}
+      />
+      <InputFieldButton
+        type="text"
+        label="Telegram ID"
+        value={telegramId} // Значение для telegramId
+        onChange={(e) => onTelegramIdChange(e.target.value)} // Обработчик изменения
       />
     </Box>
   );
