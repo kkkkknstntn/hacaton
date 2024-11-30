@@ -3,6 +3,7 @@ package ru.app.userservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.app.userservice.entity.Like;
 import ru.app.userservice.entity.Match;
@@ -63,5 +64,13 @@ public class LikeServiceImpl {
             return Mono.empty();
         }
         return likeNotificationProducer.sendNotification(secondUserId, "like");
+    }
+
+    public Flux<Like> getListBySecondUserId(Long userId) {
+        return likeRepository.findAllBySecondUserId(userId);
+    }
+
+    public Flux<Like> getListByFirstUserId(Long userId) {
+        return likeRepository.findAllByFirstUserId(userId);
     }
 }

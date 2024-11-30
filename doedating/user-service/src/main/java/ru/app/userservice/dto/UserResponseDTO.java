@@ -26,9 +26,6 @@ public class UserResponseDTO {
     private String username;
     private String firstName;
     private String lastName;
-    private boolean enabled;
-    private Provider provider;
-    private UserRole role;
     private String email;
     private LocalDate birthDate;
     private Integer age;
@@ -39,6 +36,5 @@ public class UserResponseDTO {
     private String aboutMe;
     private List<Long> selectedInterests;
     private List<String> photos;
-    private String telegramId;
     private String theme;
 }

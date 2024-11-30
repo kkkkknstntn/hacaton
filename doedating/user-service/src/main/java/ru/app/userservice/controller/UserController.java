@@ -139,8 +139,13 @@ public class UserController {
 
     // Начать рекомендации
     @PostMapping("/{userId}/recommendation")
-    public Mono<Void> recommendationUser(@PathVariable Long userId) {
+    public Mono<List<UserResponseDTO>> postRecommendation(@PathVariable Long userId) {
         return userService.startRecommendation(userId);
     }
+
+//    @GetMapping("/{userId}/recommendation")
+//    public Mono<List<UserResponseDTO>> getRecommendation(@PathVariable Long userId) {
+//        return userService.getRecommendation(userId);
+//    }
 
 }

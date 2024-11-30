@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.app.userservice.service.kafka.CalculateRecommendationProducer;
-import ru.app.userservice.service.kafka.LikeNotificationProducer;
-import java.time.LocalDateTime;
+import ru.app.userservice.service.kafka.RecommendationListener;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -35,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final GeoService geoService;
     private final UserFiltersRepository userFiltersRepository;
     private final CalculateRecommendationProducer calculateRecommendationProducer;
+    private final RecommendationListener recommendationListener;
     @Override
     public Flux<UserResponseDTO> getList() {
         return userRepository.findAll()
@@ -103,30 +103,28 @@ public class UserServiceImpl implements UserService {
                     return Mono.just(updateExistingUser(existingUser, userDTO));
                 })
                 .flatMap(userRepository::save)
-                .flatMap(updatedUser -> {
-                    return userFiltersRepository.findByUserId(id)
-                            .flatMap(existingFilters -> {
-                                log.info("Filters already exist for user ID: {}", id);
-                                return Mono.just(updatedUser);
-                            })
-                            .switchIfEmpty(Mono.defer(() -> {
-                                UserFilters newFilters = new UserFilters();
-                                newFilters.setUserId(id);
-                                LocalDate birthDate = updatedUser.getBirthDate();
-                                if (birthDate != null) {
-                                    int age = calculateAge(birthDate);
-                                    newFilters.setMinAge(age - 2);
-                                    newFilters.setMaxAge(age + 2);
-                                }
-                                Gender oppositeGender = updatedUser.getGender() == Gender.MALE ? Gender.FEMALE : Gender.MALE;
-                                newFilters.setGenderFilter(oppositeGender);
-                                newFilters.setSearchRadius(50);
+                .flatMap(updatedUser -> userFiltersRepository.findByUserId(id)
+                        .flatMap(existingFilters -> {
+                            log.info("Filters already exist for user ID: {}", id);
+                            return Mono.just(updatedUser);
+                        })
+                        .switchIfEmpty(Mono.defer(() -> {
+                            UserFilters newFilters = new UserFilters();
+                            newFilters.setUserId(id);
+                            LocalDate birthDate = updatedUser.getBirthDate();
+                            if (birthDate != null) {
+                                int age = calculateAge(birthDate);
+                                newFilters.setMinAge(age - 2);
+                                newFilters.setMaxAge(age + 2);
+                            }
+                            Gender oppositeGender = updatedUser.getGender() == Gender.MALE ? Gender.FEMALE : Gender.MALE;
+                            newFilters.setGenderFilter(oppositeGender);
+                            newFilters.setSearchRadius(50);
 
-                                return userFiltersRepository.save(newFilters)
-                                        .doOnSuccess(savedFilters -> log.info("Filters created for user ID: {}", id))
-                                        .thenReturn(updatedUser);
-                            }));
-                })
+                            return userFiltersRepository.save(newFilters)
+                                    .doOnSuccess(savedFilters -> log.info("Filters created for user ID: {}", id))
+                                    .thenReturn(updatedUser);
+                        })))
                 .flatMap(updatedUser -> Mono.zip(
                         updateUserPhotos(updatedUser.getId(), userDTO.getPhotos()),
                         updateUserInterests(updatedUser.getId(), userDTO.getSelectedInterests()),
@@ -229,19 +227,17 @@ public class UserServiceImpl implements UserService {
                 }));
     }
 
-
     // Лайки
 
-
-
-
-
-
-
     @Override
-    public Mono<Void> startRecommendation(Long userId){
-        return calculateRecommendationProducer.sendCalculateStart(userId);
+    public Mono<List<UserResponseDTO>> startRecommendation(Long userId){
+        return calculateRecommendationProducer.sendCalculateStart(userId).then(recommendationListener.getRecommendationResponse(userId));
     }
+
+//    @Override
+//    public Mono<List<UserResponseDTO>> getRecommendation(Long userId){
+//            return recommendationListener.getRecommendationResponse(userId);
+//    }
 
 
 }
