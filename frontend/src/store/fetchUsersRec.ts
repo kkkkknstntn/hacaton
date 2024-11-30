@@ -1,32 +1,33 @@
 import { fetchWithToken } from "../services/fetchService";
-const interestsEx: Interest[] = [ //   :)
-    {
-      name: "Sports",
-      color: "#FF5733",   
-      textColor: "#FFFFFF", 
-    },
-    {
-      name: "Music",
-      color: "#4CAF50",    
-      textColor: "#FFFFFF", 
-    },
-    {
-      name: "Technology",
-      color: "#2196F3",    
-      textColor: "#FFFFFF", 
-    },
-    {
-      name: "Travel",
-      color: "#FFC107",    
-      textColor: "#000000", 
-    },
-]
+const interestsEx: Interest[] = [
+  //   :)
+  {
+    name: "Sports",
+    color: "#FF5733",
+    textColor: "#FFFFFF",
+  },
+  {
+    name: "Music",
+    color: "#4CAF50",
+    textColor: "#FFFFFF",
+  },
+  {
+    name: "Technology",
+    color: "#2196F3",
+    textColor: "#FFFFFF",
+  },
+  {
+    name: "Travel",
+    color: "#FFC107",
+    textColor: "#000000",
+  },
+];
 
 export interface Interest {
-    name: string;
-    color: string;
-    textColor: string;
-  }
+  name: string;
+  color: string;
+  textColor: string;
+}
 // Интерфейс для пользователя
 export interface User {
   id: number;
@@ -58,14 +59,17 @@ interface UserResponse {
 
 export const fetchUsersRecommendation = async (): Promise<User[]> => {
   try {
-    const response = await fetchWithToken<UserResponse[]>("/api/users/recommendation", {
-      method: "GET",
-    });
+    const response = await fetchWithToken<UserResponse[]>(
+      "/api/users/recommendation",
+      {
+        method: "POST",
+      }
+    );
 
     if (!response) {
       throw new Error("Ответ от сервера пуст.");
     }
-    
+
     const users: User[] = response.map((user: UserResponse) => ({
       id: user.id,
       username: "moke",
@@ -77,7 +81,7 @@ export const fetchUsersRecommendation = async (): Promise<User[]> => {
       education: user.education,
       aboutMe: user.about_me,
       photos: user.photos,
-      interests: interestsEx
+      interests: interestsEx,
     }));
 
     return users;

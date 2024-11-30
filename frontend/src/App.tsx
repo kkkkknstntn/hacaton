@@ -51,10 +51,7 @@ const AppContent: React.FC = () => {
             <Route path="search" element={<SearchPage />} />
             <Route path="matches" element={<MatchLikesPage />} />
             <Route path="settings" element={<SettingsPage />} />
-            <Route
-              path="/api/auth/login/oauth2/code/vk" ///api/auth/login/oauth2/code/vk
-              element={<VkAuthCallback />}
-            />
+            <Route path="login/oauth2/callback" element={<VkAuthCallback />} />
           </Route>
         </Routes>
       </Router>

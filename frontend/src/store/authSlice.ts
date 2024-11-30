@@ -17,8 +17,8 @@ export const relogin = (): AppThunk => async (dispatch) => {
   const userId = localStorage.getItem("userId");
 
   if (token && userId) {
-    //dispatch(vkAuthSuccess({ token, userId: parseInt(userId, 10) })); 
-    await dispatch(fetchAndSetUserInfo()); 
+    dispatch(vkAuthSuccess({ token, userId: parseInt(userId, 10) })); // Универсальный экшен для восстановления авторизации
+    await dispatch(fetchAndSetUserInfo()); // Загружаем данные пользователя
   }
 };
 export const login = createAsyncThunk<
@@ -43,7 +43,7 @@ export const login = createAsyncThunk<
       user_id: userId,
     } = responseData;
 
-    if (accessToken || accessExpiresAt || userId) {
+    if (accessToken && accessExpiresAt && userId) {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("accessTokenExpirationTime", accessExpiresAt);
 
