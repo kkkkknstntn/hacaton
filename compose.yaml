@@ -262,15 +262,7 @@ services:
       }' http://kafka-connector:8083/connectors"
     networks:
       - doedating-network
-  telegram_notifications:
-    container_name: tg_bot
-    build: ./tgbot
-    restart: always
-    depends_on:
-      - kafka
-      - users_db
-    networks:
-       - doedating-network
+
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
@@ -331,25 +323,26 @@ services:
     networks:
       - doedating-network
 
-#  recommendation-service:
-#    build:
-#      context: ./recommendation_system_service
-#    container_name: recommendation-service
-#    depends_on:
-#      kafka:
-#        condition: service_healthy
-#      users_db:
-#        condition: service_healthy
-#    environment:
-#      KAFKA_BROKER: "kafka:9092"
-#      DATABASE_URL: "postgresql+asyncpg://postgres:postgres@users_db:5432/users_db"
-#    networks:
-#      - doedating-network
-#    healthcheck:
-#      test: ["CMD-SHELL", "nc -z kafka 9092 && nc -z users_db 5432"]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 5
+  recommendation-service:
+    build:
+      context: ./recommendation_system_service
+    container_name: recommendation-service
+    depends_on:
+      kafka:
+        condition: service_healthy
+      users_db:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER: "kafka:9092"
+      DATABASE_URL: "postgresql+asyncpg://postgres:postgres@users_db:5432/users_db"
+    networks:
+      - doedating-network
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z kafka 9092 && nc -z users_db 5432"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+     
   frontend:
     build:
       context: ./frontend

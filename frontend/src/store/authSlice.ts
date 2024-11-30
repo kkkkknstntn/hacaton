@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { fetchAndSetUserInfo } from "./userSlice";
 import { AppDispatch, AppThunk } from ".";
 import AuthState from "./authSlice.type";
+
 const initialState: AuthState = {
   isAuthenticated: localStorage.getItem("accessToken") !== null,
   token: localStorage.getItem("accessToken"),
@@ -12,15 +13,20 @@ const initialState: AuthState = {
   loading: false,
   error: null,
 };
+
+// Экшен для повторной авторизации
 export const relogin = (): AppThunk => async (dispatch) => {
   const token = localStorage.getItem("accessToken");
   const userId = localStorage.getItem("userId");
 
   if (token && userId) {
-    dispatch(vkAuthSuccess({ token, userId: parseInt(userId, 10) })); // Универсальный экшен для восстановления авторизации
-    await dispatch(fetchAndSetUserInfo()); // Загружаем данные пользователя
+    // Если есть токен и userId, обновляем Redux состояние и информацию о пользователе
+    dispatch(vkAuthSuccess({ token, userId: parseInt(userId, 10) }));
+    await dispatch(fetchAndSetUserInfo());
   }
 };
+
+// Экшен для обычной авторизации через логин и пароль
 export const login = createAsyncThunk<
   { accessToken: string; userId: number },
   { username: string; password: string },
@@ -44,9 +50,12 @@ export const login = createAsyncThunk<
     } = responseData;
 
     if (accessToken && accessExpiresAt && userId) {
+      // Сохраняем данные в localStorage
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("accessTokenExpirationTime", accessExpiresAt);
+      localStorage.setItem("userId", userId.toString());
 
+      // Запрос для получения информации о пользователе
       await dispatch(fetchAndSetUserInfo());
 
       return { accessToken, userId };
@@ -58,6 +67,7 @@ export const login = createAsyncThunk<
   }
 });
 
+// Экшен для регистрации нового пользователя
 export const register = createAsyncThunk(
   "auth/register",
   async (
@@ -101,10 +111,12 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.token = null;
       state.userId = null;
+      // Удаляем данные из localStorage
       localStorage.removeItem("accessToken");
       localStorage.removeItem("accessTokenExpirationTime");
       localStorage.removeItem("userId");
     },
+    // Экшен для успешной авторизации через VK
     vkAuthSuccess(
       state,
       action: PayloadAction<{ token: string; userId: number }>
@@ -131,7 +143,8 @@ const authSlice = createSlice({
           state.isAuthenticated = true;
           state.token = action.payload.accessToken;
           state.userId = action.payload.userId;
-          localStorage.setItem("userId", action.payload.userId.toString()); // Сохранение userId в localStorage
+          // Сохраняем userId в localStorage
+          localStorage.setItem("userId", action.payload.userId.toString());
         }
       )
       .addCase(login.rejected, (state, action) => {

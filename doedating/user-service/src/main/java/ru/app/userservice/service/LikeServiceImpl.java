@@ -69,4 +69,8 @@ public class LikeServiceImpl {
     public Flux<Like> getListBySecondUserId(Long userId) {
         return likeRepository.findAllBySecondUserId(userId);
     }
+
+    public Flux<Like> getListByFirstUserId(Long userId) {
+        return likeRepository.findAllByFirstUserId(userId);
+    }
 }

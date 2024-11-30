@@ -3,13 +3,11 @@
 .profileContainer {
   display: grid;
   grid-template-columns: 2fr 3fr 3fr;
-  gap: 20px;
   padding: 20px;
   background-color: var(--primary-dark);
   border-radius: 16px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   height: 90vh;
-  margin: 20px;
 }
 
 .profileFields {

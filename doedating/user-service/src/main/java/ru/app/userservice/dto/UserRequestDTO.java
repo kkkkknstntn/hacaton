@@ -21,10 +21,6 @@ public class UserRequestDTO {
     private String username;
     private String firstName;
     private String lastName;
-    private Long vkId;
-    private boolean enabled;
-    private String provider;
-    private String role;
     private String email;
     private LocalDate birthDate;
     private Integer age;

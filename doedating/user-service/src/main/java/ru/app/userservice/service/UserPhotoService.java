@@ -40,8 +40,7 @@ import java.util.Map;
 
                     photoProducer.sendPhotoForFaceCheck(photoId, encodedImage);
 
-                    // сложно и важно и полезно нужно для чата!
-                    return photoListener.getFaceDetectionResponse(photoId) // как работает этот вызов?
+                    return photoListener.getFaceDetectionResponse(photoId)
                             .flatMap(response -> {
                                 boolean hasFace = (boolean) response.get("analyse_result");
                                 if (!hasFace) {

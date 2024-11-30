@@ -5,7 +5,7 @@ import themeReducer from "./themeSlice";
 import authReducer from "./authSlice";
 import userReducer from "./userSlice";
 //import adminReducer from "./adminSlice";
-import searchReducer from "./searchSlice";
+//import searchReducer from "./searchSlice";
 import { useDispatch } from "react-redux";
 const store = configureStore({
   reducer: {
@@ -13,7 +13,7 @@ const store = configureStore({
     auth: authReducer,
     user: userReducer,
     //admin: adminReducer,
-    search: searchReducer,
+    //search: searchReducer,
   },
 });
 

@@ -9,18 +9,46 @@ const VkAuthCallback: React.FC = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const accessToken = params.get("access_token");
-    const accessExpiresAt = params.get("access_expires_at");
-    const userIdParam = params.get("user_id");
+    const code = params.get("code"); // Извлекаем код авторизации
 
-    if (accessToken && accessExpiresAt && userIdParam) {
-      const userId = Number(userIdParam);
-      dispatch(vkAuthSuccess({ token: accessToken, userId }));
-
-      navigate("/myprofile");
+    if (code) {
+      // Запрос на сервер для получения access_token, user_id, access_expires_at
+      fetch(`http://localhost/api/auth/login/oauth2/code/vk?code=${code}`, {
+        method: "GET",
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Ошибка авторизации с VK");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const { access_token, access_expires_at, user_id } = data;
+          if (access_token && access_expires_at && user_id) {
+            // Сохраняем данные в localStorage
+            localStorage.setItem("accessToken", access_token);
+            localStorage.setItem(
+              "accessTokenExpirationTime",
+              access_expires_at
+            );
+            localStorage.setItem("userId", user_id.toString());
+            console.log("хУЙ ПИЗДА хУЙ ПИЗДА");
+            console.log(access_token);
+            console.log(access_expires_at);
+            console.log(user_id);
+            console.log("хУЙ ПИЗДА хУЙ ПИЗДА");
+            // Обновляем Redux состояние
+            dispatch(vkAuthSuccess({ token: access_token, userId: user_id }));
+            navigate("/myprofile");
+          } else {
+            console.error("Недостаточно данных в ответе от сервера");
+          }
+        })
+        .catch((error) => {
+          console.error("Ошибка при получении данных: ", error);
+        });
     } else {
-      console.log(params);
-      console.error("Access token или access_expires_at не найдены в URL");
+      console.error("Не найден код авторизации в URL");
     }
   }, [dispatch, navigate]);
 

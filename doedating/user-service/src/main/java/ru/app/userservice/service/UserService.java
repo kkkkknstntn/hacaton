@@ -20,6 +20,7 @@ public interface UserService {
     Flux<InterestResponseDTO> getUserInterests(Long userId);
     Mono<UserFilters> getUserFilters(Long userId);
     Mono<UserFilters> updateUserFilters(Long userId, UserFilters filters);
-    Mono<Void> startRecommendation(Long userId);
+    Mono<List<UserResponseDTO>> startRecommendation(Long userId);
+//    Mono<List<UserResponseDTO>> getRecommendation(Long userId);
 }
 

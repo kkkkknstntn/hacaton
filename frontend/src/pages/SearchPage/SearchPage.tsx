@@ -1,10 +1,9 @@
-// // src/pages/SearchPage/SearchPage.tsx
 // import React, { useEffect } from "react";
-// import { Box } from "@mui/material";
-// import { useDispatch } from "react-redux";
-// import { setUsers } from "../../store/searchSlice";
+// import { Box, CircularProgress } from "@mui/material";
+// import { useDispatch, useSelector } from "react-redux";
+// import { RootState } from "../../store";
+// import { fetchUsers } from "../../store/searchSlice"; // действия для установки данных в Redux
 // import styles from "./SearchPage.module.scss";
-// import usersData from "../../data/users.json";
 // import PhotoCarouselContainer from "../../containers/PhotoCarouselContainer/PhotoCarouselContainer";
 // import SearchActionsContainer from "../../containers/SearchActionsContainer/SearchActionsContainer";
 // import SearchInterestsContainer from "../../containers/SearchInterestsContainer/SearchInterestsContainer";
@@ -12,20 +11,29 @@
 
 // const SearchPage: React.FC = () => {
 //   const dispatch = useDispatch();
+//   const { users, isLoading } = useSelector((state: RootState) => state.search);
 
 //   useEffect(() => {
-//     dispatch(setUsers(usersData));
+//     dispatch(fetchUsers());
 //   }, [dispatch]);
+
+//   if (isLoading) {
+//     return (
+//       <Box className={styles.loadingContainer}>
+//         <CircularProgress />
+//       </Box>
+//     );
+//   }
 
 //   return (
 //     <Box className={styles.container}>
 //       <Box className={styles.leftColumn}>
-//         <PhotoCarouselContainer />
+//         {users.length > 0 && <PhotoCarouselContainer/>}
 //         <SearchActionsContainer />
 //       </Box>
 //       <Box className={styles.rightColumn}>
-//         <SearchInterestsContainer />
-//         <SearchAboutMeContainer />
+//         {users.length > 0 && <SearchInterestsContainer />}
+//         {users.length > 0 && <SearchAboutMeContainer />}
 //       </Box>
 //     </Box>
 //   );
