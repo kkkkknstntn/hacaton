@@ -75,6 +75,7 @@ async def get_inl_between_link(message: Message):
 
 @start_router.message(F.text == "О боте")
 async def command_info(message: Message):
+    chat_id = message.chat.id
     await  message.answer(f'Это бот Бабангида\n'
                           f'Он будет уведомлять тебя о новых мэтчах и лайках с сайта [имя сайта]')
 
