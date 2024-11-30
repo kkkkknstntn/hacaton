@@ -4,7 +4,7 @@ import json
 import logging
 from kafka_consumer import KafkaConsumerService
 from kafka_producer import KafkaProducerService
-# from face_detector import FaceDetectorService
+from face_detector import FaceDetectorService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -24,21 +24,24 @@ async def handle_message(message):
         photo_name = message_data['photo_id']
         try:
             image_data = base64.b64decode(message_data['image_data'])
+            await detector_service.save_image(image_data)
+            saved_path = "test_photo" + str(random.randint())
+            response_data["photo_url"] = saved_path
         except base64.binascii.Error:
             raise ValueError("Ошибка при декодировании Base64 изображения")
 
         #has_face = await detector_service.detect_face(image_data)
-        has_face = True
+        #has_face = True
         response_data = {
             "user_id": user_id,
-            "analyse_result": has_face,
+            #"analyse_result": has_face,
             "photo_id": photo_name
         }
 
-        if has_face:
+        #if has_face:
             #saved_path = await detector_service.save_photo(image_data, user_id, photo_name)
-            saved_path = "test_photo" + str(random.randint())
-            response_data["photo_url"] = saved_path
+        #saved_path = "test_photo" + str(random.randint())
+        #response_data["photo_url"] = saved_path
 
         await producer_service.send(response_data)
         logger.info(f"Результат анализа отправлен: {response_data}")
