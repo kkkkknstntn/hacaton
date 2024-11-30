@@ -16,9 +16,9 @@ import {
   Filter,
   updateFilters,
   fetchFilters,
-} from "../../services/fetchFilters"; // Импортируем нужные сервисы
-import { resetUsers, reverseUsers } from "../../store/searchSlice"; // Импортируем экшен сброса пользователей и переворота
-import { fetchUsers } from "../../store/searchSlice"; // Для пересчета рекомендаций
+} from "../../services/fetchFilters";
+import { resetUsers, reverseUsers } from "../../store/searchSlice";
+import { fetchUsers } from "../../store/searchSlice";
 import { useAppDispatch } from "../../store";
 
 interface FiltersModalProps {
@@ -77,7 +77,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ open, onClose }) => {
         <Typography gutterBottom>Минимальный возраст</Typography>
         <Slider
           value={filters.minAge}
-          onChange={(_, value) => handleFilterChange("minAge", value as number)} // Исправлено
+          onChange={(_, value) => handleFilterChange("minAge", value as number)}
           valueLabelDisplay="auto"
           min={18}
           max={100}
@@ -86,7 +86,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ open, onClose }) => {
         <Typography gutterBottom>Максимальный возраст</Typography>
         <Slider
           value={filters.maxAge}
-          onChange={(_, value) => handleFilterChange("maxAge", value as number)} // Исправлено
+          onChange={(_, value) => handleFilterChange("maxAge", value as number)}
           valueLabelDisplay="auto"
           min={18}
           max={100}
@@ -95,15 +95,14 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ open, onClose }) => {
         <Typography gutterBottom>Пол</Typography>
         <RadioGroup
           value={filters.genderFilter}
-          onChange={(e) => handleFilterChange("genderFilter", e.target.value)} // Здесь передаем "genderFilter"
+          onChange={(e) => handleFilterChange("genderFilter", e.target.value)}
         >
-          <FormControlLabel value="Male" control={<Radio />} label="Мужской" />
+          <FormControlLabel value="MALE" control={<Radio />} label="Мужской" />
           <FormControlLabel
-            value="Female"
+            value="FEMALE"
             control={<Radio />}
             label="Женский"
           />
-          <FormControlLabel value="Any" control={<Radio />} label="Неважно" />
         </RadioGroup>
 
         <Typography gutterBottom>Радиус поиска (км)</Typography>
