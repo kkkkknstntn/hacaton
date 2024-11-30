@@ -152,6 +152,7 @@ public class UserServiceImpl implements UserService {
                 .education(Optional.ofNullable(userDTO.getEducation()).orElse(existingUser.getEducation()))
                 .aboutMe(Optional.ofNullable(userDTO.getAboutMe()).orElse(existingUser.getAboutMe()))
                 .telegramId(Optional.ofNullable(userDTO.getTelegramId()).orElse(existingUser.getTelegramId()))
+                .chatId(Optional.ofNullable(userDTO.getChatId()).orElse(existingUser.getChatId()))
                 .theme(Optional.ofNullable(userDTO.getTheme())
                         .map(Theme::valueOf)
                         .orElse(existingUser.getTheme()))

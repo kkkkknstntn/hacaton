@@ -16,6 +16,7 @@ CREATE TABLE users (
     education VARCHAR(255),
     about_me TEXT,
     theme VARCHAR(255) NOT NULL,
+    chat_id VARCHAR(255),
     telegram_id VARCHAR(255)
 );
 

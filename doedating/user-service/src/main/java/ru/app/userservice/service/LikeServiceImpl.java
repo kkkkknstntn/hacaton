@@ -37,7 +37,7 @@ public class LikeServiceImpl {
                     return likeRepository.save(like);
                 }))
                 .then(checkMatch(firstUserId, secondUserId, typeOfLike))
-                .then(sendNotificationIfNecessary(secondUserId, typeOfLike))
+//                .then(sendNotificationIfNecessary(secondUserId, typeOfLike))
                 .doOnError(e -> log.error("Ошибка с лайком", e))
                 .then(Mono.empty());
     }
@@ -52,18 +52,21 @@ public class LikeServiceImpl {
                                 .createdAt(LocalDateTime.now())
                                 .build();
                         return matchRepository.save(match)
-                                .then(likeNotificationProducer.sendNotification(firstUserId, "match"))
-                                .then(likeNotificationProducer.sendNotification(secondUserId, "match"));
+                                .then(likeNotificationProducer.sendNotification(firstUserId, secondUserId, "match"))
+                                .then(likeNotificationProducer.sendNotification(secondUserId, secondUserId, "match"));
+                    } else {
+                        return Mono.empty();
                     }
-                    return Mono.empty();
-                });
+                }).switchIfEmpty(sendNotificationIfNecessary(secondUserId, typeOfLike )); // Ensures completion without any value;
+
+
     }
 
     private Mono<Void> sendNotificationIfNecessary(Long secondUserId, Integer typeOfLike) {
         if (typeOfLike != 1) {
             return Mono.empty();
         }
-        return likeNotificationProducer.sendNotification(secondUserId, "like");
+        return likeNotificationProducer.sendNotification(secondUserId, secondUserId,"like");
     }
 
     public Flux<Like> getListBySecondUserId(Long userId) {

@@ -42,7 +42,8 @@ def main_kb():
     kb_list = [
         [KeyboardButton(text="О боте")],
         [KeyboardButton(text="Перейти на сайт")],
-        [KeyboardButton(text="Выключить уведомления")]
+        [KeyboardButton(text="Выключить уведомления")],
+         [KeyboardButton(text="Мой chat_id")] 
     ]
     keyboard = ReplyKeyboardMarkup(
         keyboard=kb_list,
@@ -58,6 +59,10 @@ def site_link_kb():
     ]
     return InlineKeyboardMarkup(inline_keyboard=kb)
 
+
+@start_router.message(F.text == "Мой chat_id")
+async def send_chat_id(message: Message):
+    await message.answer(f"Ваш chat_id: {message.chat.id}")
 
 @start_router.message(CommandStart())
 async def command_start_handler(message: Message):
@@ -121,7 +126,7 @@ async def consume_kaf_messages():
             if message_data.get("type") == "like":
                 await send_like_notification(message_data)
             elif message_data.get("type") == "match":
-                await send_like_notification(message_data)
+                await send_match_notification(message_data)
             #await bot.send_message(chat_id="8139260626", text="бабангида")
     except Exception as e:
         logger.error(f"Error in Kafka consumer: {e}")
@@ -131,12 +136,14 @@ async def consume_kaf_messages():
         logger.info("Kafka consumer stopped.")
 
 async def send_like_notification(data):
-    chat_id = data["userId"]
-    await bot.send_message(8139260626, "Новый лайк!")
+    chat_id =  int(data["chat_id"])
+    await bot.send_message(chat_id, "Новый лайк!")
 
 async def send_match_notification(data):
-    chat_id = data["userId"]
-    await bot.send_message(8139260626, "Поздравляем, у вас новый мэтч!")
+    chat_id =  int(data["chat_id"])
+    telegram_id = data["telegram_id"]
+    message = f"Поздравляем, у вас новый мэтч! Telegram ID: {telegram_id}"
+    await bot.send_message(chat_id=chat_id, text=message)
 
 
 async def main():

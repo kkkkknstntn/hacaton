@@ -39,6 +39,7 @@ public class User {
     private String education;
     private String aboutMe;
     private String telegramId;
+    private String chatId;
 
     private Theme theme = Theme.LIGHT;
 

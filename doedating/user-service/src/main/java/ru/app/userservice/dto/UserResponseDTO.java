@@ -36,5 +36,7 @@ public class UserResponseDTO {
     private String aboutMe;
     private List<Long> selectedInterests;
     private List<String> photos;
+    private String chatId;
+    private String telegramId;
     private String theme;
 }
