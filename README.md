@@ -1,3 +1,40 @@
+## 1. Сборка проекта
+Для сборки проекта достаточно выполнить команду:
+```
+docker-compose -f  up -d --build
+
+```
+
+## 2. Проблемы с контейнерами
+
+При первой сборке контейнер kafka-connector не успевает стартовать до того, как сработает скрипт, запускаемый в контейнере hacaton-connector-script-1. В таком случае контейнер со скриптом стоит перезапустить после полной сборки контейнера kafka-connector. Если запуск прошел корректно, то в логах acaton-connector-script-1 будет
+
+```
+OK: 8 MiB in 19 packages
+{"name":"postgres-source","config":{"connector.class":"io.confluent.connect.jdbc.JdbcSourceConnector","tasks.max":"1","connection.url":"jdbc:postgresql://auth_db:5432/auth_db?user=postgres&password=postgres","topic.prefix":"auth_","poll.interval.ms":"1000","mode":"incrementing","incrementing.column.name":"id","table.whitelist":"users","name":"postgres-source"},"tasks":[],"type":"source"}fetch https://dl-cdn.alpinelinux.org/alpine/v3.14/main/aarch64/APKINDEX.tar.gz
+```
+
+При потворной сборке проекта в логах появится сообщение
+
+```
+OK: 8 MiB in 19 packages
+{"error_code":409,"message":"Connector postgres-source already exists"}fetch https://dl-cdn.alpinelinux.org/alpine/v3.14/main/aarch64/APKINDEX.tar.gz
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.14/community/aarch64/APKINDEX.tar.gz
+```
+Это значит, что коннектор уже существует.
+
+С некоторой вероятностью при первом запуске могут остановиться контейнеры photo-service и frontend. Их достаточно один раз перезапустить, после чего проблем быть не должно.
+
+Авторы признают, что данная инструкция звучит в некоторой степени сомнительно, однако ввиду ограниченного времени мы не успели корректно настроить healthcheck, поэтому, к сожалению, проект запускается именно таким образом.
+
+## 3. Документация
+Ссылка на сваггер:
+
+```
+http://localhost/swagger-ui.html
+```
+
+
 ⬛⬛⬛⬛⬛⬛⬛🟤⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚪⚪⚪⚪⚪⚪⚪⚪⬜⬜⬜⬜⬜⬜⚪⚪⚪⚪⚪⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
 ⬛⬛⬛⬛⬛⬛🟥🟤⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚪⚪⚪⚪⚪⚪⚪⚪⚪⬜⬜⬜⚪⚪⚪⚪⚪⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
 ⬛⬛⬛⬛⬛⬛⬛⬛🟥⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚪⚪⚪⚪⚪⚪⚫⬛⬛⚪⬜⚪⚪⚪⚪⚪⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
