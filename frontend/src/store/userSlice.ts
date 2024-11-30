@@ -28,6 +28,7 @@ interface UserState {
   aboutMe: string;
   selectedInterests: number[];
   photos: string[];
+  telegramId: string;
 }
 
 const initialState: UserState = {
@@ -39,6 +40,7 @@ const initialState: UserState = {
   gender: "",
   city: "",
   job: "",
+  telegramId: "",
   education: "",
   aboutMe: "",
   selectedInterests: [],
@@ -65,6 +67,9 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    updateTelegramId(state, action: PayloadAction<string>) {
+      state.telegramId = action.payload;
+    },
     updateEmail(state, action: PayloadAction<string>) {
       state.email = action.payload;
     },
@@ -140,6 +145,7 @@ export const saveUserProfile = (): AppThunk => async (_dispatch, getState) => {
         job: userState.job,
         education: userState.education,
         about_me: userState.aboutMe,
+        telegram_id: userState.telegramId,
         selected_interests: userState.selectedInterests,
         photos: userState.photos,
       });
@@ -191,6 +197,7 @@ export const {
   updateEmail,
   updateFirstName,
   updateLastName,
+  updateTelegramId,
   updateBirthDate,
   updateGender,
   updateCity,

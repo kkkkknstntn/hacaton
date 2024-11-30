@@ -3,8 +3,8 @@
   top: 13%;
   display: flex;
   flex-direction: column;
-  width: 240px;
-  padding: 20px;
+  width: 50%;
+  padding: 5%;
 }
 
 .menuItem {
@@ -20,15 +20,6 @@
   margin-right: 10px;
 }
 
-.icon {
-  font-size: 30px;
-}
-
-.label {
-  font-size: 20px;
-  font-weight: normal;
-}
-
 .active {
   color: var(--secondary-main);
 
@@ -38,5 +29,13 @@
 
   .label {
     font-weight: bold;
+    font-size: larger;
   }
 }
+
+@media (width: 600) {
+  .label {
+    font-size: small;
+  }
+}
+

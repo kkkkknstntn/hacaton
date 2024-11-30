@@ -42,7 +42,7 @@ const HeaderAppBar: React.FC = () => {
             </Typography>
           </Box>
           <Typography variant="h4" noWrap className={styles.title}>
-            ~patrolmatch~
+            PatrolMatch
           </Typography>
         </Box>
 
@@ -67,7 +67,7 @@ const HeaderAppBar: React.FC = () => {
             Светлая
           </MenuItem>
           <MenuItem onClick={() => handleThemeChange("dark")}>Тёмная</MenuItem>
-          <MenuItem onClick={() => handleThemeChange("cake")}>Кекс</MenuItem>
+          <MenuItem onClick={() => handleThemeChange("cake")}>Малина</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

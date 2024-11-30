@@ -1,5 +1,4 @@
-// src/components/PhotoCarousel/PhotoCarousel.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, IconButton } from "@mui/material";
 import { User } from "../../store/searchSlice";
 import styles from "./PhotoCarousel.module.scss";
@@ -7,6 +6,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import GroupsIcon from "@mui/icons-material/Groups";
+import { fetchWithTokenPhoto } from "../../services/fetchService";
 
 interface PhotoCarouselProps {
   user: User;
@@ -14,79 +14,75 @@ interface PhotoCarouselProps {
 
 const PhotoCarousel: React.FC<PhotoCarouselProps> = ({ user }) => {
   const [currentPhoto, setCurrentPhoto] = useState(0);
+  const [photoUrls, setPhotoUrls] = useState<string[]>([]); // Массив для хранения всех URL-ов фото
 
+  // Загружаем все фото при монтировании компонента
+  useEffect(() => {
+    const loadAllPhotos = async () => {
+      const urls: string[] = [];
+      for (const photoId of user.photos) {
+        const photoName = photoId.split("/").pop(); // Получаем имя файла
+        const photoUrl = `/api/users/${user.id}/photo/${photoName}`;
+        try {
+          const response = await fetchWithTokenPhoto(photoUrl, {
+            method: "GET",
+            credentials: "include",
+          });
+          const url = URL.createObjectURL(response);
+          urls.push(url); // Добавляем URL в массив
+        } catch (error) {
+          console.error("Failed to load photo:", error);
+        }
+      }
+      setPhotoUrls(urls); // Сохраняем все URL-ы фото в состояние
+    };
+
+    if (user.photos.length > 0) {
+      loadAllPhotos();
+    }
+  }, [user.id, user.photos]);
+
+  // Функции для переключения фото
   const nextPhoto = () => {
-    setCurrentPhoto((currentPhoto + 1) % user.photos.length);
+    setCurrentPhoto((prev) => (prev + 1) % photoUrls.length);
   };
 
   const prevPhoto = () => {
-    setCurrentPhoto(
-      (currentPhoto - 1 + user.photos.length) % user.photos.length
-    );
+    setCurrentPhoto((prev) => (prev - 1 + photoUrls.length) % photoUrls.length);
   };
-
-  const showBlurredSidePhotos = user.photos.length >= 3;
 
   return (
     <Box className={styles.carousel}>
-      {showBlurredSidePhotos && (
+      {/* Если изображения загружены, отображаем их */}
+      {photoUrls.length > 0 && (
         <img
-          src={
-            user.photos[
-              (currentPhoto - 1 + user.photos.length) % user.photos.length
-            ]
-          }
-          alt="Previous blurred"
-          className={`${styles.photo} ${styles.blurredPhoto} ${styles.leftBlurredPhoto}`}
+          src={photoUrls[currentPhoto]}
+          alt="User photo"
+          className={styles.photo}
         />
       )}
 
-      <Box
-        className={`${styles.photoWrapper} ${
-          showBlurredSidePhotos ? styles.mainPhotoWrapper : ""
-        }`}
-      >
-        <img
-          src={user.photos[currentPhoto]}
-          alt="User photo"
-          className={`${styles.photo} ${styles.mainPhoto}`}
-        />
-        <Box className={styles.overlay}>
-          <Box className={styles.buttonsContainer}>
-            <IconButton
-              onClick={prevPhoto}
-              className={`${styles.navButton} ${styles.prevButton}`}
-            >
-              <ArrowBackIosNewIcon />
-            </IconButton>
-            <IconButton
-              onClick={nextPhoto}
-              className={`${styles.navButton} ${styles.nextButton}`}
-            >
-              <ArrowForwardIosIcon />
-            </IconButton>
-          </Box>
-          <Typography variant="h5" className={styles.name}>
-            {user.name} {user.age}
-          </Typography>
-          <Box className={styles.infoRow}>
-            <LocationOnIcon className={styles.icon} />
-            <Typography variant="body2">{user.city}</Typography>
-          </Box>
-          <Box className={styles.infoRow}>
-            <GroupsIcon className={styles.icon} />
-            <Typography variant="body2">{user.education}</Typography>
-          </Box>
+      <Box className={styles.overlay}>
+        <Box className={styles.buttonsContainer}>
+          <IconButton onClick={prevPhoto} className={styles.navButton}>
+            <ArrowBackIosNewIcon />
+          </IconButton>
+          <IconButton onClick={nextPhoto} className={styles.navButton}>
+            <ArrowForwardIosIcon />
+          </IconButton>
+        </Box>
+        <Typography variant="h5" className={styles.name}>
+          {user.firstName} {user.age}
+        </Typography>
+        <Box className={styles.infoRow}>
+          <LocationOnIcon className={styles.icon} />
+          <Typography variant="body2">{user.city}</Typography>
+        </Box>
+        <Box className={styles.infoRow}>
+          <GroupsIcon className={styles.icon} />
+          <Typography variant="body2">{user.education}</Typography>
         </Box>
       </Box>
-
-      {showBlurredSidePhotos && (
-        <img
-          src={user.photos[(currentPhoto + 1) % user.photos.length]}
-          alt="Next blurred"
-          className={`${styles.photo} ${styles.blurredPhoto} ${styles.rightBlurredPhoto}`}
-        />
-      )}
     </Box>
   );
 };

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import InputField from "../InputField";
 import { Button } from "@mui/material";
-import VkIdButton from "../VkElements/VkButton";
 import styles from "./Registration.module.scss";
 import { RegistrationProps } from "./Registration.type.ts";
+import AuthComponent from "../VkElements/AuthComponent.tsx";
 
 const Registration: React.FC<RegistrationProps> = ({
   onRegister,
@@ -65,9 +65,7 @@ const Registration: React.FC<RegistrationProps> = ({
       >
         {loading ? "Загрузка..." : "Зарегистрироваться"}
       </Button>
-      <a href="http://localhost/api/auth/oauth2/vk">
-        <VkIdButton />
-      </a>
+      <AuthComponent />
       <Button
         variant="text"
         className={styles.switchButton}

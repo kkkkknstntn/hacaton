@@ -2,8 +2,8 @@
 
 .appBar {
   position: static;
-  font-style: italic;
-  background-color: var(--secondary-dark) !important;
+  font-style: normal;
+  background-color: var(--primary-dark) !important;
   color: var(--background-default) !important;
   .themeButton {
     font-size: 1.5rem;
@@ -28,7 +28,7 @@
 }
 
 .logo {
-  background-color: var(--secondary-main);
+  background-color: var(--primary-light);
   color: var(--secondary-contrast-text);
   width: 50px;
   height: 50px;

@@ -3,10 +3,10 @@
 .profileContainer {
   display: grid;
   grid-template-columns: 2fr 2fr 2fr;
-  background-color: var(--primary-dark);
+  background-color: var(--secondary-light);
   border-radius: 16px;
-  box-shadow: 0px 4px 12px #858585;
-  height: 65%;
+  box-shadow: 0px 1px 6px #858585;
+  height: 75%;
   padding: 1%;
 }
 
@@ -19,7 +19,7 @@
   padding-top: 15px;
   padding-right: 5%;
   border-radius: 12px;
-  height: 123.5%;
+  height: 122%;
 }
 
 .extraInfo {

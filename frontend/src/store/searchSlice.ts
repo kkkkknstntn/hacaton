@@ -1,47 +1,122 @@
-// src/store/searchSlice.ts
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { fetchInterests } from "../services/fetchInterests";
+import { RootState } from ".";
 
-// Теперь Interest будет представлять только id интересов
 export interface Interest {
-  id: number;
-}
-
-export interface User {
   name: string;
+  color: string;
+  textColor: string;
+}
+export interface User {
+  id: number;
+  username: string;
+  firstName: string;
+  lastName: string;
   age: number;
   city: string;
+  job: string;
   education: string;
-  photos: string[];
-  interests: number[]; // Храним только id интересов
   aboutMe: string;
+  photos: string[];
+  interests: Interest[];
 }
 
 interface SearchState {
   users: User[];
   currentIndex: number;
+  isLoading: boolean;
 }
 
 const initialState: SearchState = {
   users: [],
   currentIndex: 0,
+  isLoading: false,
 };
 
+export const fetchUsers = createAsyncThunk<User[], void>(
+  "search/fetchUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const users = await fetchUsersRecommendation(); // Сюда дергать ручку для реков
+      return users;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchUserInterests = createAsyncThunk<
+  void,
+  { userId: number; index: number }
+>(
+  "search/fetchUserInterests",
+  async ({ userId, index }, { dispatch, rejectWithValue }) => {
+    try {
+      const interests = await fetchInterests(userId);
+      dispatch(setUserInterests({ interests, index }));
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+// Слайс для работы с поиском
 const searchSlice = createSlice({
   name: "search",
   initialState,
   reducers: {
-    setUsers(state, action: PayloadAction<User[]>) {
-      state.users = action.payload;
-    },
     nextUser(state) {
-      state.currentIndex = (state.currentIndex + 1) % state.users.length;
+      if (state.currentIndex < state.users.length - 1) {
+        state.currentIndex += 1;
+      } else {
+        state.currentIndex = 0;
+      }
     },
-    prevUser(state) {
-      state.currentIndex =
-        (state.currentIndex - 1 + state.users.length) % state.users.length;
+    setUserInterests(
+      state,
+      action: PayloadAction<{ interests: Interest[]; index: number }>
+    ) {
+      const { interests, index } = action.payload;
+      if (state.users[index]) {
+        state.users[index].interests = interests;
+      }
     },
+    resetUsers(state) {
+      state.users = [];
+      state.currentIndex = 0;
+    },
+    reverseUsers(state) {
+      state.users.reverse(); // Переворачиваем список пользователей
+      state.currentIndex = 0; // Сбрасываем индекс на первый элемент
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
+        state.isLoading = false;
+        state.users = action.payload;
+      })
+      .addCase(fetchUsers.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchUserInterests.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUserInterests.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchUserInterests.rejected, (state) => {
+        state.isLoading = false;
+      });
   },
 });
 
-export const { setUsers, nextUser, prevUser } = searchSlice.actions;
+export const { nextUser, setUserInterests, resetUsers, reverseUsers } =
+  searchSlice.actions;
+
+export const selectSearchState = (state: RootState) => state.search;
+
 export default searchSlice.reducer;

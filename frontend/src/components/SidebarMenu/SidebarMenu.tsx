@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import MailIcon from "@mui/icons-material/Mail";
+//import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -15,11 +15,11 @@ const menuItems = [
     label: "Профиль",
     icon: <AccountCircleIcon className={styles.icon} />,
   },
-  {
-    path: "/chat",
-    label: "Сообщения",
-    icon: <MailIcon className={styles.icon} />,
-  },
+  // {
+  //   path: "/chat",
+  //   label: "Сообщения",
+  //   icon: <MailIcon className={styles.icon} />,
+  // },
   {
     path: "/notifications",
     label: "События",

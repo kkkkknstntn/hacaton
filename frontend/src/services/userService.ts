@@ -87,6 +87,7 @@ export const updateUser = async (
     about_me: string;
     selected_interests: number[];
     photos: string[];
+    telegram_id: string;
   }>
 ): Promise<void> => {
   try {

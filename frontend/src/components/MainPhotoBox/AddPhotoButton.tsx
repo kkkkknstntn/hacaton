@@ -13,7 +13,7 @@ const AddPhotoButton: React.FC<AddPhotoButtonProps> = ({ onAdd }) => (
       onChange={onAdd} 
       className={styles.inputFile}
     />
-    <AddIcon className={styles.addIcon} />
+    +
   </Box>
 );
 

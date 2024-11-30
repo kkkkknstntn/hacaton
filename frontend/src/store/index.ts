@@ -12,7 +12,6 @@ const store = configureStore({
     theme: themeReducer,
     auth: authReducer,
     user: userReducer,
-    //admin: adminReducer,
     search: searchReducer,
   },
 });
