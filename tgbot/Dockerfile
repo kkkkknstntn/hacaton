@@ -1,27 +1,27 @@
-FROM python:3.10-slim
+FROM python:3.9
 
-# Устанавливаем системные зависимости
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libssl-dev \
-    libsasl2-dev \
-    libz-dev \
-    python3-dev \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
-
-# Установим рабочую директорию внутри контейнера
+# Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Скопируем requirements.txt в контейнер
-COPY requirements.txt /app/
+# Копируем файл зависимостей
+COPY requirements.txt /app/requirements.txt
 
-# Обновим pip и установим зависимости
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+# Обновляем pip, setuptools и wheel, и устанавливаем зависимости
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r requirements.txt
 
-# Скопируем все файлы из текущей директории в контейнер
-COPY . /app/
+# Устанавливаем системные библиотеки
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Укажем команду для запуска бота (замените на название вашего скрипта)
-CMD ["python", "bot.py"]
+# Копируем весь проект
+COPY . /app
+
+# Указываем команду для запуска бота
+CMD ["python", "teleBot.py"]
