@@ -122,7 +122,7 @@ public class UserController {
     @Operation(
             summary = "Получить фильтры пользователя",
             description = "Возвращает фильтры пользователя по его ID.")
-    @GetMapping("/filters/{userId}")
+    @GetMapping("/filters")
     public Mono<UserFilters> getUserFilters(@RequestHeader(value = "X-User-ID", required = false) Long userId) {
         return userService.getUserFilters(userId);
     }
@@ -130,7 +130,7 @@ public class UserController {
     @Operation(
             summary = "Обновить фильтры пользователя",
             description = "Изменяет фильтры пользователя по его ID.")
-    @PatchMapping("/filters/{userId}")
+    @PatchMapping("/filters")
     @ResponseStatus(HttpStatus.OK)
     public Mono<UserFilters> updateUserFilters(
             @RequestHeader(value = "X-User-ID", required = false) Long userId, @RequestBody UserFilters filters) {

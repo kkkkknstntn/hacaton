@@ -332,6 +332,7 @@ services:
         condition: service_healthy
       users_db:
         condition: service_healthy
+    restart: always
     environment:
       KAFKA_BROKER: "kafka:9092"
       DATABASE_URL: "postgresql+asyncpg://postgres:postgres@users_db:5432/users_db"
@@ -355,6 +356,7 @@ services:
       - api-gateway
     networks:
       - doedating-network
+    restart: always
     environment:
       REACT_APP_API_URL: "http://localhost:80" 
 
@@ -365,6 +367,7 @@ services:
     depends_on:
       - kafka
       - users_db
+      
     networks:
        - doedating-network
 
