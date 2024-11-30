@@ -3,7 +3,7 @@ import InputField from "../InputField";
 import { Button } from "@mui/material";
 import styles from "./Login.module.scss";
 import { LoginProps } from "./Login.type.ts";
-import AuthComponent from "../VkElements/AuthComponent.tsx";
+import VkIdButton from "../VkElements/VkButton.tsx";
 
 const Login: React.FC<LoginProps> = ({
   onLogin,
@@ -43,7 +43,9 @@ const Login: React.FC<LoginProps> = ({
       >
         {loading ? "Загрузка..." : "Войти"}
       </Button>
-      <AuthComponent />
+      <a href="http://localhost/api/auth/oauth2/vk">
+        <VkIdButton />
+      </a>
       <Button
         variant="text"
         className={styles.switchButton}
