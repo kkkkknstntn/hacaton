@@ -60,6 +60,7 @@ public class RecommendationListener {
         return UserResponseDTO.builder()
                 .id(((Number) userMap.get("user_id")).longValue())
                 .firstName((String) userMap.get("first_name"))
+                .age((int) userMap.get("age"))
                 .lastName((String) userMap.get("last_name"))
                 .aboutMe((String) userMap.get("about_me"))
                 .selectedInterests(((List<Number>) userMap.get("interests"))

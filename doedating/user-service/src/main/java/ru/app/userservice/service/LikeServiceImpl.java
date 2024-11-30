@@ -46,21 +46,28 @@ public class LikeServiceImpl {
         return likeRepository.findByFirstUserIdAndSecondUserId(secondUserId, firstUserId)
                 .flatMap(otherLike -> {
                     if (otherLike.getTypeOfLike() == 1 || otherLike.getTypeOfLike() == 2) {
+                        // Создание матча
                         Match match = Match.builder()
                                 .userId1(Math.min(firstUserId, secondUserId))
                                 .userId2(Math.max(firstUserId, secondUserId))
                                 .createdAt(LocalDateTime.now())
                                 .build();
+
+                        // Сохранение матча и отправка уведомлений
                         return matchRepository.save(match)
                                 .then(likeNotificationProducer.sendNotification(firstUserId, secondUserId, "match"))
-                                .then(likeNotificationProducer.sendNotification(secondUserId, secondUserId, "match"));
+                                .then(likeNotificationProducer.sendNotification(secondUserId, firstUserId, "match"));
                     } else {
+                        // Если условие не срабатывает, возвращаем Mono.empty()
                         return Mono.empty();
                     }
-                }).switchIfEmpty(sendNotificationIfNecessary(secondUserId, typeOfLike )); // Ensures completion without any value;
-
-
+                })
+                .switchIfEmpty(
+                        // Этот блок сработает только если матч не был сохранён и уведомления не были отправлены
+                        sendNotificationIfNecessary(secondUserId, typeOfLike)
+                );
     }
+
 
     private Mono<Void> sendNotificationIfNecessary(Long secondUserId, Integer typeOfLike) {
         if (typeOfLike != 1) {
