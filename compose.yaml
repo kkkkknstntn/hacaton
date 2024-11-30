@@ -358,6 +358,16 @@ services:
     environment:
       REACT_APP_API_URL: "http://localhost:80" 
 
+  telegram_notifications:
+    container_name: tg_bot
+    build: ./tgbot
+    restart: always
+    depends_on:
+      - kafka
+      - users_db
+    networks:
+       - doedating-network
+
 
 networks:
   doedating-network:
