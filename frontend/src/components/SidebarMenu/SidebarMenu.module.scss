@@ -21,8 +21,15 @@
 }
 
 .label{
-  @media (max-width: 700px) {
-    font-size: small;
+  @media (min-width: 576px) and (max-width: 768px) {
+    font-size: 0pt;
+  }
+}
+
+.label:not(:active){
+  font-size: 70%;
+  @media (min-width: 0px) and (max-width: 700px) {
+    font-size: 0%;
   }
 }
 
@@ -35,7 +42,12 @@
 
   .label {
     font-weight: bold;
-    font-size: larger;
+    @media screen {
+      font-size: 80%;
+    }
+    @media (min-width: 0px) and (max-width: 700px) {
+      font-size: 0pt;
+    }
   }
 }
 

@@ -2,7 +2,7 @@
 
 .container {
   display: flex;
-  padding: 4px;
+  padding: 1%;
   border-radius: 12px;
   &:hover {
     box-shadow: 0 6px 6px rgb(0 0 0 / 0.1);
@@ -22,21 +22,17 @@
 }
 
 .icon {
-  padding: 10px;
-}
-
-.content {
-  margin-left: 3px;
+  padding: 3px;
 }
 
 .title {
-  font-size: 22pt;
+  font-size: 100%;
   font-style: light;
   color: var(--primary-main);
 }
 
 .message {
-  font-size: 14pt;
+  font-size: 100%;
   color: var(--primary-main);
 }
 
