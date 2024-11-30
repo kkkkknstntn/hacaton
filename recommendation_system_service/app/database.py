@@ -49,16 +49,23 @@ async def find_matching_users(session: AsyncSession, filters):
             interests = await session.execute(interests_query, {"user_id": user.id})
             interests = [row[0] for row in interests.fetchall()]
 
+            photos_query = text("""
+            SELECT path FROM photos WHERE user_id = :user_id
+            """)
+            photos = await session.execute(photos_query, {"user_id": user.id})
+            photos = [row[0] for row in photos.fetchall()]
+
             matching_users.append({
                 "user_id": user.id,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
                 "about_me": user.about_me,
                 "interests": interests,
-                "gender" : user.gender,
+                "gender": user.gender,
                 "city": user.city,
                 "job": user.job,
-                "education": user.education
+                "education": user.education,
+                "photos": photos
             })
 
     return matching_users

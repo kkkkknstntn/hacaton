@@ -32,5 +32,6 @@ public class UserRequestDTO {
     private List<Long> selectedInterests;
     private List<String> photos;
     private String telegramId;
+    private String chatId;
     private String theme;
 }

@@ -68,6 +68,7 @@ public class RecommendationListener {
                 .city((String) userMap.get("city"))
                 .job((String) userMap.get("job"))
                 .education((String) userMap.get("education"))
+                .photos((List<String>) userMap.get("photos"))
                 .build();
     }
 }
