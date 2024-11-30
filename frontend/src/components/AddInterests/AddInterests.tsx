@@ -75,7 +75,7 @@ const AddInterests: React.FC<AddInterestsProps> = ({
               label=""
               onClick={handleOpenModal}
               className={styles.addChip}
-              icon={<AddIcon />}
+              icon={<AddIcon sx={{ fontSize: 35 }}/>}
             />
           )}
         </Box>

@@ -18,8 +18,7 @@
 }
 
 .icon {
-  font-size: 32px;
-  color: var(--text-primary);
+  color: var(--primary-contrast-text);
   justify-content: center;
 }
 
@@ -32,6 +31,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  color: var(--primary-contrast-text);
 }
 // .chipsContainer {
 //   display: grid;
@@ -64,8 +64,6 @@
 }
 
 .addChip {
-  width: 60px;
-  height: 32px;
   background-color: var(--primary-dark);
   color: var(--primary-contrast-text);
   cursor: pointer;
