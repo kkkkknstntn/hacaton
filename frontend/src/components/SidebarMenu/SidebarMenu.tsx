@@ -4,8 +4,7 @@ import { Box, Typography } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 //import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import SearchIcon from "@mui/icons-material/Search";
-import SettingsIcon from "@mui/icons-material/Settings";
+import SearchIcon from "@mui/icons-material/StarRate";//import SettingsIcon from "@mui/icons-material/StarRate";
 import styles from "./SidebarMenu.module.scss";
 import { SidebarMenuProps } from "./SidebarMenu.type.ts";
 
@@ -27,14 +26,14 @@ const menuItems = [
   },
   {
     path: "/search",
-    label: "Поиск",
+    label: "Рекомендации",
     icon: <SearchIcon className={styles.icon} />,
   },
-  {
-    path: "/settings",
-    label: "Настройки",
-    icon: <SettingsIcon className={styles.icon} />,
-  },
+  // {
+  //   path: "/settings",
+  //   label: "Настройки",
+  //   icon: <SettingsIcon className={styles.icon} />,
+  // },
 ];
 
 const SidebarMenu: React.FC<SidebarMenuProps> = () => {

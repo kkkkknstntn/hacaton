@@ -12,6 +12,7 @@ import {
   updateJob,
   updateEducation,
   updateTelegramId,
+  updateChatId,
 } from "../../store/userSlice";
 import { UserProfileFieldsContainerProps } from "./UserProfileFieldsContainer.type";
 import styles from "./UserProfileFieldsContainer.module.scss";
@@ -30,6 +31,7 @@ const UserProfileFieldsContainer: React.FC<
     job,
     education,
     telegramId,
+    chatId,
   } = useSelector((state: RootState) => state.user);
 
   return (
@@ -44,6 +46,7 @@ const UserProfileFieldsContainer: React.FC<
         job={job}
         education={education}
         telegramId={telegramId}
+        chatId={chatId}
         onEmailChange={(value) => dispatch(updateEmail(value))}
         onFirstNameChange={(value) => dispatch(updateFirstName(value))}
         onLastNameChange={(value) => dispatch(updateLastName(value))}
@@ -53,6 +56,7 @@ const UserProfileFieldsContainer: React.FC<
         onJobChange={(value) => dispatch(updateJob(value))}
         onEducationChange={(value) => dispatch(updateEducation(value))}
         onTelegramIdChange={(value) => dispatch(updateTelegramId(value))}
+        onChatIdChange={(value) => dispatch(updateChatId(value))}
       />
     </div>
   );

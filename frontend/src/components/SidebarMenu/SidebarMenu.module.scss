@@ -20,6 +20,12 @@
   margin-right: 10px;
 }
 
+.label{
+  @media (max-width: 700px) {
+    font-size: small;
+  }
+}
+
 .active {
   color: var(--secondary-main);
 
@@ -30,12 +36,6 @@
   .label {
     font-weight: bold;
     font-size: larger;
-  }
-}
-
-@media (width: 600) {
-  .label {
-    font-size: small;
   }
 }
 

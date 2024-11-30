@@ -8,6 +8,7 @@ export interface UserProfileFieldsProps {
   job: string;
   education: string;
   telegramId: string;
+  chatId: string;
   onEmailChange: (value: string) => void;
   onFirstNameChange: (value: string) => void;
   onLastNameChange: (value: string) => void;
@@ -17,4 +18,5 @@ export interface UserProfileFieldsProps {
   onJobChange: (value: string) => void;
   onEducationChange: (value: string) => void;
   onTelegramIdChange: (value: string) => void;
+  onChatIdChange: (value: string) => void;
 }

@@ -29,6 +29,7 @@ interface UserState {
   selectedInterests: number[];
   photos: string[];
   telegramId: string;
+  chatId: string;
 }
 
 const initialState: UserState = {
@@ -41,6 +42,7 @@ const initialState: UserState = {
   city: "",
   job: "",
   telegramId: "",
+  chatId: "",
   education: "",
   aboutMe: "",
   selectedInterests: [],
@@ -69,6 +71,9 @@ const userSlice = createSlice({
   reducers: {
     updateTelegramId(state, action: PayloadAction<string>) {
       state.telegramId = action.payload;
+    },
+    updateChatId(state, action: PayloadAction<string>) {
+      state.chatId = action.payload;
     },
     updateEmail(state, action: PayloadAction<string>) {
       state.email = action.payload;
@@ -198,6 +203,7 @@ export const {
   updateFirstName,
   updateLastName,
   updateTelegramId,
+  updateChatId,
   updateBirthDate,
   updateGender,
   updateCity,
