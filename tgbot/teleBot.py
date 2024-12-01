@@ -165,17 +165,21 @@ async def consume_kaf_messages():
         consumer = None
         logger.info("Kafka consumer stopped.")
 
-
 async def send_like_notification(data):
     chat_id = int(data["chat_id"])
-    await bot.send_message(chat_id, "Новый лайк!")
-
+    try:
+        await bot.send_message(chat_id, "Новый лайк!")
+    except Exception as e:
+        logger.error(f"Failed to send like notification to chat_id {chat_id}: {e}")
 
 async def send_match_notification(data):
     chat_id = int(data["chat_id"])
     telegram_id = data["telegram_id"]
     message = f"Поздравляем, у вас новый мэтч! Telegram ID: {telegram_id}"
-    await bot.send_message(chat_id=chat_id, text=message)
+    try:
+        await bot.send_message(chat_id=chat_id, text=message)
+    except Exception as e:
+        logger.error(f"Failed to send match notification to chat_id {chat_id}: {e}")
 
 
 async def main():

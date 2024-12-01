@@ -325,7 +325,7 @@ services:
 
   recommendation-service:
     build:
-      context: ./recommendation_system_service_ml
+      context: ./recommendation_system_service
     container_name: recommendation-service
     depends_on:
       kafka:
