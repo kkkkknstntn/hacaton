@@ -4,16 +4,7 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
-  gap: 100%;
-  @media (max-width: 670px){
-      gap:110%;
-  }
-  .h6 {
-    font-size: larger;
-    @media (min-width:670px){
-      font-size: 5pt;
-    }
-  }
+  gap: 16px;
 }
 
 .button {
@@ -21,29 +12,23 @@
   width: 4vw;
   height: 4vw;
   transition: background-color 0.3s ease;
-  display: flex;
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.702);
-  }
-  .h6 {
-    font-size: larger;
-    @media (min-width:670px){
-      font-size: 5pt;
-    }
   }
 }
 
 .dislikeIcon {
   color: var(--primary-contrast-text);
-  margin-right: 10%;
+  font-size: 50%;
+}
+
+.superLikeIcon {
+  color: var(--warning-main);
+  font-size: 80%;
 }
 
 .likeIcon {
   color: var(--secondary-main);
-  margin-right: 10%;
-}
-
-.hiddenLikeIcon {
-  color: var(--secondary-main);
-  margin-right: 10%;
+  font-size: 80%;
 }

@@ -124,6 +124,7 @@ const userSlice = createSlice({
       state.aboutMe = action.payload.aboutMe;
       state.selectedInterests = action.payload.selectedInterests;
       state.photos = action.payload.photos;
+      state.telegramId = action.payload.telegramId;
     });
   },
 });

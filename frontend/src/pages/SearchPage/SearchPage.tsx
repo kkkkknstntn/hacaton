@@ -45,7 +45,6 @@ const SearchPage: React.FC = () => {
       <Box className={styles.rightColumn}>
         {users.length > 0 && <SearchInterestsContainer />}
         {users.length > 0 && <SearchAboutMeContainer />}
-        {/* Кнопка для открытия модального окна */}
         <Button
           variant="contained"
           color="primary"

@@ -94,8 +94,8 @@ const UserProfileFields: React.FC<UserProfileFieldsProps> = ({
       <InputFieldButton
         type="text"
         label="Telegram ID"
-        value={telegramId} // Значение для telegramId
-        onChange={(e) => onTelegramIdChange(e.target.value)} // Обработчик изменения
+        value={telegramId} 
+        onChange={(e) => onTelegramIdChange(e.target.value)} 
       />
     </Box>
   );

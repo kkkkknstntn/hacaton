@@ -15,7 +15,7 @@ interface PhotoCarouselProps {
 
 const PhotoCarousel: React.FC<PhotoCarouselProps> = ({ user }) => {
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0); // Индекс текущей фотографии
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(Math.floor(user.photos.length / 2));
 
   //const positions = ["center", "left", "right"];
 
@@ -56,7 +56,6 @@ const PhotoCarousel: React.FC<PhotoCarouselProps> = ({ user }) => {
     }
   }, [user.id, user.photos]);
 
-  // Переход к следующей фотографии
   const handleNext = () => {
     setCurrentPhotoIndex((prevIndex) => (prevIndex + 1) % photoUrls.length);
   };

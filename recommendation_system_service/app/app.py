@@ -17,9 +17,6 @@ async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False
 
 producer = Producer({'bootstrap.servers': KAFKA_BROKER})
 
-
-
-
 async def handle_message(message):
     try:
         user_id, status = message.get("user_id"), message.get("status")

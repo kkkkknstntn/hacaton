@@ -12,6 +12,7 @@ import { MainPhotoBoxProps } from "./MainPhotoBox.type.ts";
 const MainPhotoBox: React.FC<MainPhotoBoxProps> = ({ userId, photos = [] }) => {
   const [exitingIndex, setExitingIndex] = useState<number | null>(null);
   const [isUploading, setIsUploading] = useState(false); 
+  const [initialPhotoCount, setInitialPhotoCount] = useState(photos.length);
   const dispatch: AppDispatch = useDispatch();
 
   const handleDeletePhoto = (index: number) => {
@@ -27,7 +28,15 @@ const MainPhotoBox: React.FC<MainPhotoBoxProps> = ({ userId, photos = [] }) => {
     const file = event.target.files?.[0];
     if (file) {
       setIsUploading(true);
+
       await dispatch(uploadPhoto(file));
+
+      if (photos.length === initialPhotoCount) {
+        alert("Ошибка: На фото не обнаружено лицо.");
+      } else {
+        setInitialPhotoCount(photos.length); 
+      }
+
       setIsUploading(false);
     }
   };
@@ -55,7 +64,7 @@ const MainPhotoBox: React.FC<MainPhotoBoxProps> = ({ userId, photos = [] }) => {
         {photos.length < 9 && (
           <Box className={styles.addPhotoContainer}>
             {isUploading ? (
-              <CircularProgress />
+              <CircularProgress sx={{ color: 'black' }}/>
             ) : (
               <AddPhotoButton onAdd={handleAddPhoto} />
             )}
