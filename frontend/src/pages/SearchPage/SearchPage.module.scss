@@ -2,9 +2,10 @@
 
 .container {
   display: grid;
-  grid-template-columns: 3fr 0.5fr;
-  padding: 1%;
-  height: 3%;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  height: 100vh;
   box-sizing: border-box;
 }
 
@@ -16,20 +17,6 @@
 
 .rightColumn {
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 0.5fr;
   gap: 10px;
-  font-size: medium;
-  :hover {
-    color: var(--primary-main);
-    background-color: var(--secondary-main);
-  }
 }
-
-// .button {
-//   width:40%;
-//   font-size: 50%;
-//   :hover {
-//     color: var(--secondary-dark);
-//     background-color: var(--secondary-main);
-//   }
-// }
